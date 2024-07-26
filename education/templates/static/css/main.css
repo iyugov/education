@@ -1,0 +1,151 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+header {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border-style: none;
+}
+
+main {
+    text-align: left;
+    margin: 3em 0;
+}
+
+footer {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 3em;
+    width: 100%;
+    border-style: solid;
+    border-width: 1px;
+    background-color: darkgreen;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+}
+
+.catalog-items {
+    border-collapse: collapse;
+}
+
+.catalog-items th, .catalog-items td {
+    padding: 2px 8px;
+    border: 1px solid #999;
+}
+
+.catalog-items th {
+    background-color: #80ff80;
+    font-weight: bold;
+    text-align: center;
+}
+
+.catalog-items td {
+    text-align: left;
+}
+
+.catalog-items tbody tr:nth-child(odd) {
+    background-color: #d0ffd0;
+}
+
+.catalog-items tbody tr:nth-child(even) {
+    background-color: #e8ffe8;
+}
+
+.catalog-items tbody tr:hover {
+    background-color: #b0ffb0;
+}
+
+.catalog-items .cell-text {
+    text-align: left;
+}
+
+.catalog-items .cell-date, .catalog-items .cell-label, .catalog-items .cell-button {
+    text-align: center;
+}
+
+~ .catalog-items .action-icon  {
+    height: 10px;
+    width: 10px;
+}
+
+.action-icon {
+    height: 20px;
+    width: 20px;
+}
+
+.navbar {
+  overflow: hidden;
+  float: right;
+  background-color: darkgreen;
+  width: 100%;
+}
+
+.navbar a {
+  float: right;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.subnav {
+  float: left;
+  overflow: hidden;
+}
+
+.subnav .subnavbtn {
+  font-size: 16px;  
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit;
+  font-weight: bold;
+  margin: 0;
+}
+
+.navbar a:hover, .subnav:hover .subnavbtn {
+  background-color: #009900;
+}
+
+.subnav-content {
+  display: none;
+  position: absolute;
+  background-color: darkgreen;
+  z-index: 1;
+}
+
+.subnav-content a {
+  float: left;
+  color: white;
+  text-decoration: none;
+}
+
+.subnav-content a:hover {
+  background-color: #009900;
+  color: white;
+}
+
+.subnav:hover .subnav-content {
+  display: block;
+}
+
+.subnav:hover .subnav-content a {
+  float: none;
+  display: block;
+}

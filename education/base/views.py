@@ -1,3 +1,66 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404,redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
+from django.urls import reverse_lazy
+from django.views.generic.edit import DeleteView
+
 
 # Create your views here.
+
+from .models import Individual
+from .forms import IndividualForm
+
+from pass_cards.models import PassCardIssue
+
+class IndividualDelete(DeleteView):
+    model = Individual
+    success_url = reverse_lazy('individuals')
+    template_name = 'individual_confirm_delete.html'
+    
+    def get(self, request, *args, **kwargs):
+        individual = self.get_object()
+        pass_card_issues = []
+        dependences = PassCardIssue.objects.filter(individual=individual)
+        if dependences.exists():
+            pass_card_issues = [str(dependency) for dependency in dependences]
+        if pass_card_issues:
+            return render(request, 'individual_cannot_delete.html', {'individual': individual, 'pass_card_issues': pass_card_issues})
+        return super().get(request, *args, **kwargs)
+
+
+@login_required(login_url='/login/')
+def individuals_list(request):
+    individuals = Individual.objects.all()
+    return render(request, 'individuals_list.html', {'individuals': individuals})
+
+@login_required(login_url='/login/')
+def individual_new(request):
+    if request.method == "POST":
+        form = IndividualForm(request.POST)
+        if form.is_valid():
+            individual = form.save(commit=False)
+            individual.save()
+            return redirect('individuals')
+    else:
+        form = IndividualForm()
+    return render(request, 'individual_edit.html', {'form': form})
+
+@login_required(login_url='/login/')
+def individual_edit(request, pk):
+    individual = get_object_or_404(Individual, pk=pk)
+    if request.method == 'POST':
+        form = IndividualForm(request.POST, instance=individual)
+        if form.is_valid():
+            individual = form.save(commit=False)
+            individual.save()
+            return redirect('individuals')
+    else:
+        form = IndividualForm(instance=individual)
+    return render(request, 'individual_edit.html', {'form': form})
+
+def user_logout(request):
+    logout(request)
+    return render(request, 'logout.html', {})
+
+def home(request):
+    return render(request, 'home.html', {})

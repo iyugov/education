@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Удаление физического лица</h1>
+    <p>Удалить физическое лицо "{{ object }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Удалить</button>
+    </form>
+    <a href="{% url 'individuals' %}">Отменить</a>
+{% endblock %}

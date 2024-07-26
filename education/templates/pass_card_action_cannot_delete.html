@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Невозможно удалить действие с пропускными картами</h1>
+    <p>Действие с пропускными картами "{{ pass_card_action }}" используется:</p>
+    <ul>
+        {% if pass_card_issues %}
+        <li>в оформлениях:
+            <ul>
+                {% for pass_card_issue in pass_card_issues %}
+                <li>{{ pass_card_issue }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endif %}
+    </ul> 
+    <form method="post">
+        {% csrf_token %}
+    </form>
+    <a href="{% url 'pass_card_actions' %}">Возврат</a>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Система "Образование"{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="navbar">
+                {% if user.is_authenticated %}
+                <div class="subnav">
+                    <button class="subnavbtn">Основное<i class="fa fa-caret-down"></i></button>
+                    <div class="subnav-content">
+                        <a href="{% url 'individuals' %}">Физические лица</a>
+                    </div>
+                </div>
+                <div class="subnav">
+                    <button class="subnavbtn">Пропускные карты<i class="fa fa-caret-down"></i></button>
+                    <div class="subnav-content">
+                        <a href="{% url 'pass_card_types' %}">Типы</a>
+                        <a href="{% url 'pass_card_actions' %}">Действия</a>
+                        <a href="{% url 'pass_cards' %}">Карты</a>
+                        <a href="{% url 'pass_card_issues' %}">Оформление</a>
+                    </div>
+                </div>
+                <a href="{% url 'logout' %}">Выйти</a>
+                {% else %}
+                <a href="{% url 'login' %}">Войти</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+    
+    <main>
+        {% block content %}
+        <h1>Система &laquo;Образование&raquo;</h1>
+        {% endblock %}
+    </main>
+    
+    <footer>
+        <p><a href="mailto:iyugov@gmail.com">&copy; 2024 Югов И. О.</a></p>
+    </footer>
+</body>
+</html>

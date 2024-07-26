@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Невозможно удалить тип пропускной карты</h1>
+    <p>Тип пропускной карты "{{ pass_card_type }}" используется:</p>
+    <ul>
+        {% if pass_cards %}
+        <li>в картах:
+            <ul>
+                {% for pass_card in pass_cards %}
+                <li>{{ pass_card }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endif %}
+    </ul> 
+    <form method="post">
+        {% csrf_token %}
+    </form>
+    <a href="{% url 'pass_card_types' %}">Возврат</a>
+{% endblock %}

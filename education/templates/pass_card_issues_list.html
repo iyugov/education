@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <h1>Оформление пропускных карт</h1>
+    <a href="{% url 'pass_card_issue_new' %}"><img class="action-icon" src="{% static 'icons/add.png' %}" alt="Создать"></a>
+    <table class="catalog-items">
+        <tr>
+            <th>Дата</th>
+            <th>Карта</th>
+            <th>Физическое лицо</th>
+            <th>Описание</th>
+            <th>Действие</th>
+            <th>Ред.</th>
+            <th>Удал.</th>
+        </tr>
+    {% for pass_card_issue in pass_card_issues %}
+        <tr class="{% cycle 'odd' 'even' %}">
+            <td class="cell-date">{{ pass_card_issue.issue_date | date:"d.m.Y" }}</td>
+            <td class="cell-label">{{ pass_card_issue.card }}</td>
+            <td class="cell-text">{{ pass_card_issue.individual }}</td>
+            <td class="cell-text">{{ pass_card_issue.description }}</td>
+            <td class="cell-text">{{ pass_card_issue.action }}</td>
+            <td class="cell-button"><a href="{% url 'pass_card_issue_edit' pass_card_issue.pk %}"><img class="action-icon" src="{% static 'icons/edit.png' %}" alt="Изменить"></a></td>
+            <td class="cell-button"><a href="{% url 'pass_card_issue_delete' pass_card_issue.pk %}"><img class="action-icon" src="{% static 'icons/delete.png' %}" alt="Удалить"></a></td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

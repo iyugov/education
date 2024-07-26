@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Удаление оформления пропускной карты</h1>
+    <p>Удалить оформление "{{ object }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Удалить</button>
+    </form>
+    <a href="{% url 'pass_card_actions' %}">Отменить</a>
+{% endblock %}
