@@ -16,16 +16,22 @@
                 <div class="subnav">
                     <button class="subnavbtn">Основное<i class="fa fa-caret-down"></i></button>
                     <div class="subnav-content">
-                        <a href="{% url 'individuals' %}">Физические лица</a>
+                        <a href="{% url 'individual_list' %}">Физические лица</a>
+                    </div>
+                </div>
+                <div class="subnav">
+                    <button class="subnavbtn">Обучение<i class="fa fa-caret-down"></i></button>
+                    <div class="subnav-content">
+                        <a href="{% url 'class_group_list' %}">Классы</a>
                     </div>
                 </div>
                 <div class="subnav">
                     <button class="subnavbtn">Пропускные карты<i class="fa fa-caret-down"></i></button>
                     <div class="subnav-content">
-                        <a href="{% url 'pass_card_types' %}">Типы</a>
-                        <a href="{% url 'pass_card_actions' %}">Действия</a>
-                        <a href="{% url 'pass_cards' %}">Карты</a>
-                        <a href="{% url 'pass_card_issues' %}">Оформление</a>
+                        <a href="{% url 'pass_card_type_list' %}">Типы</a>
+                        <a href="{% url 'pass_card_action_list' %}">Действия</a>
+                        <a href="{% url 'pass_card_list' %}">Карты</a>
+                        <a href="{% url 'pass_card_issue_list' %}">Оформление</a>
                     </div>
                 </div>
                 <a href="{% url 'logout' %}">Выйти</a>

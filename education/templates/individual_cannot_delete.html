@@ -4,10 +4,10 @@
     <h1>Невозможно удалить физическое лицо</h1>
     <p>Физическое лицо "{{ individual }}" используется:</p>
     <ul>
-        {% if pass_card_issues %}
+        {% if pass_card_issue_list %}
         <li>в оформлениях:
             <ul>
-                {% for pass_card_issue in pass_card_issues %}
+                {% for pass_card_issue in pass_card_issue_list %}
                 <li>{{ pass_card_issue }}</li>
                 {% endfor %}
             </ul>
@@ -17,5 +17,5 @@
     <form method="post">
         {% csrf_token %}
     </form>
-    <a href="{% url 'individuals' %}">Возврат</a>
+    <a href="{% url 'individual_list' %}">Возврат</a>
 {% endblock %}

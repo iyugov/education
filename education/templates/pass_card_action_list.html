@@ -11,7 +11,7 @@
             <th>Ред.</th>
             <th>Удал.</th>
         </tr>
-    {% for pass_card_action in pass_card_actions %}
+    {% for pass_card_action in pass_card_action_list %}
         <tr class="{% cycle 'odd' 'even' %}">
             <td class="cell-text">{{ pass_card_action.title }}</td>
             <td class="cell-button"><a href="{% url 'pass_card_action_edit' pass_card_action.pk %}"><img class="action-icon" src="{% static 'icons/edit.png' %}" alt="Изменить"></a></td>

@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404,redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.urls import reverse_lazy
@@ -14,7 +14,7 @@ from pass_cards.models import PassCardIssue
 
 class IndividualDelete(DeleteView):
     model = Individual
-    success_url = reverse_lazy('individuals')
+    success_url = reverse_lazy('individual_list')
     template_name = 'individual_confirm_delete.html'
     
     def get(self, request, *args, **kwargs):
@@ -24,14 +24,14 @@ class IndividualDelete(DeleteView):
         if dependences.exists():
             pass_card_issues = [str(dependency) for dependency in dependences]
         if pass_card_issues:
-            return render(request, 'individual_cannot_delete.html', {'individual': individual, 'pass_card_issues': pass_card_issues})
+            return render(request, 'individual_cannot_delete.html', {'individual': individual, 'pass_card_issue_list': pass_card_issues})
         return super().get(request, *args, **kwargs)
 
 
 @login_required(login_url='/login/')
-def individuals_list(request):
+def individual_list(request):
     individuals = Individual.objects.all()
-    return render(request, 'individuals_list.html', {'individuals': individuals})
+    return render(request, 'individual_list.html', {'individual_list': individuals})
 
 @login_required(login_url='/login/')
 def individual_new(request):
@@ -40,7 +40,7 @@ def individual_new(request):
         if form.is_valid():
             individual = form.save(commit=False)
             individual.save()
-            return redirect('individuals')
+            return redirect('individual_list')
     else:
         form = IndividualForm()
     return render(request, 'individual_edit.html', {'form': form})
@@ -53,7 +53,7 @@ def individual_edit(request, pk):
         if form.is_valid():
             individual = form.save(commit=False)
             individual.save()
-            return redirect('individuals')
+            return redirect('individual_list')
     else:
         form = IndividualForm(instance=individual)
     return render(request, 'individual_edit.html', {'form': form})

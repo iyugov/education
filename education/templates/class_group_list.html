@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <h1>Классы</h1>
+    <a href="{% url 'class_group_new' %}"><img class="action-icon" src="{% static 'icons/add.png' %}" alt="Создать"></a>
+    <table class="catalog-items">
+        <tr>
+            <th>Класс</th>
+            <th>Ред.</th>
+            <th>Удал.</th>
+        </tr>
+    {% for class_group in class_group_list %}
+        <tr class="{% cycle 'odd' 'even' %}">
+            <td class="cell-label">{{ class_group }}</td>
+            <td class="cell-button"><a href="{% url 'class_group_edit' class_group.pk %}"><img class="action-icon" src="{% static 'icons/edit.png' %}" alt="Изменить"></a></td>
+            <td class="cell-button"><a href="{% url 'class_group_delete' class_group.pk %}"><img class="action-icon" src="{% static 'icons/delete.png' %}" alt="Удалить"></a></td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

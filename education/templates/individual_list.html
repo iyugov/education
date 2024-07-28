@@ -17,7 +17,7 @@
             <th>Ред.</th>
             <th>Удал.</th>
         </tr>
-    {% for individual in individuals %}
+    {% for individual in individual_list %}
         <tr class="{% cycle 'odd' 'even' %}">
             <td class="cell-text">{{ individual.last_name }}</td>
             <td class="cell-text">{{ individual.first_name }}</td>

@@ -4,10 +4,10 @@
     <h1>Невозможно удалить тип пропускной карты</h1>
     <p>Тип пропускной карты "{{ pass_card_type }}" используется:</p>
     <ul>
-        {% if pass_cards %}
+        {% if pass_card_list %}
         <li>в картах:
             <ul>
-                {% for pass_card in pass_cards %}
+                {% for pass_card in pass_card_list %}
                 <li>{{ pass_card }}</li>
                 {% endfor %}
             </ul>
@@ -17,5 +17,5 @@
     <form method="post">
         {% csrf_token %}
     </form>
-    <a href="{% url 'pass_card_types' %}">Возврат</a>
+    <a href="{% url 'pass_card_type_list' %}">Возврат</a>
 {% endblock %}

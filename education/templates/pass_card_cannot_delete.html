@@ -4,10 +4,10 @@
     <h1>Невозможно удалить пропускную карту</h1>
     <p>Пропускная карта "{{ pass_card }}" используется:</p>
     <ul>
-        {% if pass_card_issues %}
+        {% if pass_card_issue_list %}
         <li>в оформлениях:
             <ul>
-                {% for pass_card_issue in pass_card_issues %}
+                {% for pass_card_issue in pass_card_issue_list %}
                 <li>{{ pass_card_issue }}</li>
                 {% endfor %}
             </ul>
@@ -17,5 +17,5 @@
     <form method="post">
         {% csrf_token %}
     </form>
-    <a href="{% url 'pass_cards' %}">Возврат</a>
+    <a href="{% url 'pass_card_list' %}">Возврат</a>
 {% endblock %}

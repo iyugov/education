@@ -15,7 +15,7 @@ from .forms import PassCardActionForm, PassCardTypeForm, PassCardForm, PassCardI
 
 class PassCardActionDelete(DeleteView):
     model = PassCardAction
-    success_url = reverse_lazy('pass_card_actions')
+    success_url = reverse_lazy('pass_card_action_list')
     template_name = 'pass_card_action_confirm_delete.html'
     
     def get(self, request, *args, **kwargs):
@@ -25,13 +25,13 @@ class PassCardActionDelete(DeleteView):
         if dependences.exists():
             pass_card_issues = [str(dependency) for dependency in dependences]
         if pass_card_issues:
-            return render(request, 'pass_card_action_cannot_delete.html', {'pass_card_action': pass_card_action, 'pass_card_issues': pass_card_issues})
+            return render(request, 'pass_card_action_cannot_delete.html', {'pass_card_action': pass_card_action, 'pass_card_issue_list': pass_card_issues})
         return super().get(request, *args, **kwargs)
 
 @login_required(login_url='/login/')
-def pass_card_actions_list(request):
+def pass_card_action_list(request):
     pass_card_actions = PassCardAction.objects.all()
-    return render(request, 'pass_card_actions_list.html', {'pass_card_actions': pass_card_actions})
+    return render(request, 'pass_card_action_list.html', {'pass_card_action_list': pass_card_actions})
 
 @login_required(login_url='/login/')
 def pass_card_action_new(request):
@@ -40,7 +40,7 @@ def pass_card_action_new(request):
         if form.is_valid():
             pass_card_action = form.save(commit=False)
             pass_card_action.save()
-            return redirect('pass_card_actions')
+            return redirect('pass_card_action_list')
     else:
         form = PassCardActionForm()
     return render(request, 'pass_card_action_edit.html', {'form': form})
@@ -53,7 +53,7 @@ def pass_card_action_edit(request, pk):
         if form.is_valid():
             pass_card_action = form.save(commit=False)
             pass_card_action.save()
-            return redirect('pass_card_actions')
+            return redirect('pass_card_action_list')
     else:
         form = PassCardActionForm(instance=pass_card_action)
     return render(request, 'pass_card_action_edit.html', {'form': form})
@@ -62,7 +62,7 @@ def pass_card_action_edit(request, pk):
 
 class PassCardTypeDelete(DeleteView):
     model = PassCardType
-    success_url = reverse_lazy('pass_card_types')
+    success_url = reverse_lazy('pass_card_type_list')
     template_name = 'pass_card_type_confirm_delete.html'
     
     def get(self, request, *args, **kwargs):
@@ -72,13 +72,13 @@ class PassCardTypeDelete(DeleteView):
         if dependences.exists():
             pass_cards = [str(dependency) for dependency in dependences]
         if pass_cards:
-            return render(request, 'pass_card_type_cannot_delete.html', {'pass_card_type': pass_card_type, 'pass_cards': pass_cards})
+            return render(request, 'pass_card_type_cannot_delete.html', {'pass_card_type': pass_card_type, 'pass_card_list': pass_cards})
         return super().get(request, *args, **kwargs)
 
 @login_required(login_url='/login/')
-def pass_card_types_list(request):
+def pass_card_type_list(request):
     pass_card_types = PassCardType.objects.all()
-    return render(request, 'pass_card_types_list.html', {'pass_card_types': pass_card_types})
+    return render(request, 'pass_card_type_list.html', {'pass_card_type_list': pass_card_types})
 
 @login_required(login_url='/login/')
 def pass_card_type_new(request):
@@ -87,7 +87,7 @@ def pass_card_type_new(request):
         if form.is_valid():
             pass_card_type = form.save(commit=False)
             pass_card_type.save()
-            return redirect('pass_card_types')
+            return redirect('pass_card_type_list')
     else:
         form = PassCardTypeForm()
     return render(request, 'pass_card_type_edit.html', {'form': form})
@@ -100,7 +100,7 @@ def pass_card_type_edit(request, pk):
         if form.is_valid():
             pass_card_type = form.save(commit=False)
             pass_card_type.save()
-            return redirect('pass_card_types')
+            return redirect('pass_card_type_list')
     else:
         form = PassCardTypeForm(instance=pass_card_type)
     return render(request, 'pass_card_type_edit.html', {'form': form})
@@ -109,7 +109,7 @@ def pass_card_type_edit(request, pk):
 
 class PassCardDelete(DeleteView):
     model = PassCard
-    success_url = reverse_lazy('pass_cards')
+    success_url = reverse_lazy('pass_card_list')
     template_name = 'pass_card_confirm_delete.html'
     
     def get(self, request, *args, **kwargs):
@@ -119,13 +119,13 @@ class PassCardDelete(DeleteView):
         if dependences.exists():
             pass_card_issues = [str(dependency) for dependency in dependences]
         if pass_card_issues:
-            return render(request, 'pass_card_cannot_delete.html', {'pass_card': pass_card, 'pass_card_issues': pass_card_issues})
+            return render(request, 'pass_card_cannot_delete.html', {'pass_card': pass_card, 'pass_card_issue_list': pass_card_issues})
         return super().get(request, *args, **kwargs)
 
 @login_required(login_url='/login/')
-def pass_cards_list(request):
+def pass_card_list(request):
     pass_cards = PassCard.objects.all()
-    return render(request, 'pass_cards_list.html', {'pass_cards': pass_cards})
+    return render(request, 'pass_card_list.html', {'pass_card_list': pass_cards})
 
 @login_required(login_url='/login/')
 def pass_card_new(request):
@@ -134,7 +134,7 @@ def pass_card_new(request):
         if form.is_valid():
             pass_card = form.save(commit=False)
             pass_card.save()
-            return redirect('pass_cards')
+            return redirect('pass_card_list')
     else:
         form = PassCardForm()
     return render(request, 'pass_card_edit.html', {'form': form})
@@ -147,7 +147,7 @@ def pass_card_edit(request, pk):
         if form.is_valid():
             pass_card = form.save(commit=False)
             pass_card.save()
-            return redirect('pass_cards')
+            return redirect('pass_card_list')
     else:
         form = PassCardForm(instance=pass_card)
     return render(request, 'pass_card_edit.html', {'form': form})
@@ -156,13 +156,13 @@ def pass_card_edit(request, pk):
 
 class PassCardIssueDelete(DeleteView):
     model = PassCardIssue
-    success_url = reverse_lazy('pass_card_issues')
+    success_url = reverse_lazy('pass_card_issue_list')
     template_name = 'pass_card_issue_confirm_delete.html'
 
 @login_required(login_url='/login/')
-def pass_card_issues_list(request):
+def pass_card_issue_list(request):
     pass_card_issues = PassCardIssue.objects.all()
-    return render(request, 'pass_card_issues_list.html', {'pass_card_issues': pass_card_issues})
+    return render(request, 'pass_card_issue_list.html', {'pass_card_issue_list': pass_card_issues})
 
 @login_required(login_url='/login/')
 def pass_card_issue_new(request):
@@ -171,7 +171,7 @@ def pass_card_issue_new(request):
         if form.is_valid():
             pass_card_issue = form.save(commit=False)
             pass_card_issue.save()
-            return redirect('pass_card_issues')
+            return redirect('pass_card_issue_list')
     else:
         form = PassCardIssueForm()
     return render(request, 'pass_card_issue_edit.html', {'form': form})
@@ -184,7 +184,7 @@ def pass_card_issue_edit(request, pk):
         if form.is_valid():
             pass_card_issue = form.save(commit=False)
             pass_card_issue.save()
-            return redirect('pass_card_issues')
+            return redirect('pass_card_issue_list')
     else:
         form = PassCardIssueForm(instance=pass_card_issue)
     return render(request, 'pass_card_issue_edit.html', {'form': form})
