@@ -5,14 +5,24 @@ from django.views.generic.edit import DeleteView
 
 # Create your views here.
 
-from .models import ClassGroup
-from .forms import ClassGroupForm
+from .models import ClassGroup, ClassGroupEnrollment
+from .forms import ClassGroupForm, ClassGroupEnrollmentForm
 
 
 class ClassGroupDelete(DeleteView):
     model = ClassGroup
     success_url = reverse_lazy('class_group_list')
     template_name = 'class_group_confirm_delete.html'
+
+    def get(self, request, *args, **kwargs):
+        class_group = self.get_object()
+        class_group_enrollments = []
+        dependencies = ClassGroupEnrollment.objects.filter(class_group=class_group)
+        if dependencies.exists():
+            class_group_enrollments = [str(dependency) for dependency in dependencies]
+        if class_group_enrollments:
+            return render(request, 'class_group_cannot_delete.html', {'class_group': class_group, 'class_group_enrollment_list': class_group_enrollments})
+        return super().get(request, *args, **kwargs)
 
 
 @login_required(login_url='/login/')
@@ -46,3 +56,42 @@ def class_group_edit(request, pk):
     else:
         form = ClassGroupForm(instance=class_group)
     return render(request, 'class_group_edit.html', {'form': form})
+
+
+class ClassGroupEnrollmentDelete(DeleteView):
+    model = ClassGroupEnrollment
+    success_url = reverse_lazy('class_group_enrollment_list')
+    template_name = 'class_group_enrollment_confirm_delete.html'
+
+
+@login_required(login_url='/login/')
+def class_group_enrollment_list(request):
+    class_group_enrollments = ClassGroupEnrollment.objects.all()
+    return render(request, 'class_group_enrollment_list.html', {'class_group_enrollment_list': class_group_enrollments})
+
+
+@login_required(login_url='/login/')
+def class_group_enrollment_new(request):
+    if request.method == "POST":
+        form = ClassGroupEnrollmentForm(request.POST)
+        if form.is_valid():
+            class_group_enrollment = form.save(commit=False)
+            class_group_enrollment.save()
+            return redirect('class_group_enrollment_list')
+    else:
+        form = ClassGroupEnrollmentForm()
+    return render(request, 'class_group_enrollment_edit.html', {'form': form})
+
+
+@login_required(login_url='/login/')
+def class_group_enrollment_edit(request, pk):
+    class_group_enrollment = get_object_or_404(ClassGroupEnrollment, pk=pk)
+    if request.method == 'POST':
+        form = ClassGroupEnrollmentForm(request.POST, instance=class_group_enrollment)
+        if form.is_valid():
+            class_group_enrollment = form.save(commit=False)
+            class_group_enrollment.save()
+            return redirect('class_group_enrollment_list')
+    else:
+        form = ClassGroupEnrollmentForm(instance=class_group_enrollment)
+    return render(request, 'class_group_enrollment_edit.html', {'form': form})

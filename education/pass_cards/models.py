@@ -66,19 +66,19 @@ class PassCardIssue(models.Model):
     """Оформление карты."""
 
     issue_date = models.DateField(_('Дата оформления'), default=now)
-    '''Дата рождения.'''
+    """Дата рождения."""
 
     card = models.ForeignKey(PassCard, null=True, on_delete=models.RESTRICT, verbose_name='Карта')
-    '''Карта.'''
+    """Карта."""
 
     individual = models.ForeignKey(Individual, null=True, on_delete=models.PROTECT, verbose_name='Физическое лицо')
-    '''Физическое лицо.'''
+    """Физическое лицо."""
     
     description = models.CharField(_('Описание'), max_length=30, default='')
-    '''Описание физического лица.'''
+    """Описание физического лица."""
     
     action = models.ForeignKey(PassCardAction, null=True, on_delete=models.PROTECT, verbose_name='Действие')
-    '''Действие.'''
+    """Действие."""
 
     class Meta:
         verbose_name = _('Оформление карты')

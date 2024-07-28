@@ -20,7 +20,7 @@ class PassCardForm(forms.ModelForm):
         fields = ['pass_id', 'pass_type']
 
 
- class PassCardIssueForm(forms.ModelForm):
-     class Meta:
-         model = PassCardIssue
-         fields = ['issue_date', 'card', 'individual', 'description', 'action']
+class PassCardIssueForm(forms.ModelForm):
+    class Meta:
+        model = PassCardIssue
+        fields = ['issue_date', 'card', 'individual', 'description', 'action']

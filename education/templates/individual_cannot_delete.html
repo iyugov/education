@@ -13,6 +13,15 @@
             </ul>
         </li>
         {% endif %}
+        {% if class_group_enrollment_list %}
+        <li>в зачислениях:
+            <ul>
+                {% for class_group_enrollment in class_group_enrollment_list %}
+                <li>{{ class_group_enrollment }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endif %}
     </ul> 
     <form method="post">
         {% csrf_token %}
