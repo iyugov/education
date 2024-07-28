@@ -8,6 +8,7 @@ from django.views.generic.edit import DeleteView
 from .models import ClassGroup
 from .forms import ClassGroupForm
 
+
 class ClassGroupDelete(DeleteView):
     model = ClassGroup
     success_url = reverse_lazy('class_group_list')
@@ -18,6 +19,7 @@ class ClassGroupDelete(DeleteView):
 def class_group_list(request):
     class_groups = ClassGroup.objects.all()
     return render(request, 'class_group_list.html', {'class_group_list': class_groups})
+
 
 @login_required(login_url='/login/')
 def class_group_new(request):
@@ -30,6 +32,7 @@ def class_group_new(request):
     else:
         form = ClassGroupForm()
     return render(request, 'class_group_edit.html', {'form': form})
+
 
 @login_required(login_url='/login/')
 def class_group_edit(request, pk):

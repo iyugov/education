@@ -12,6 +12,7 @@ from .forms import IndividualForm
 
 from pass_cards.models import PassCardIssue
 
+
 class IndividualDelete(DeleteView):
     model = Individual
     success_url = reverse_lazy('individual_list')
@@ -20,9 +21,9 @@ class IndividualDelete(DeleteView):
     def get(self, request, *args, **kwargs):
         individual = self.get_object()
         pass_card_issues = []
-        dependences = PassCardIssue.objects.filter(individual=individual)
-        if dependences.exists():
-            pass_card_issues = [str(dependency) for dependency in dependences]
+        dependencies = PassCardIssue.objects.filter(individual=individual)
+        if dependencies.exists():
+            pass_card_issues = [str(dependency) for dependency in dependencies]
         if pass_card_issues:
             return render(request, 'individual_cannot_delete.html', {'individual': individual, 'pass_card_issue_list': pass_card_issues})
         return super().get(request, *args, **kwargs)
@@ -32,6 +33,7 @@ class IndividualDelete(DeleteView):
 def individual_list(request):
     individuals = Individual.objects.all()
     return render(request, 'individual_list.html', {'individual_list': individuals})
+
 
 @login_required(login_url='/login/')
 def individual_new(request):
@@ -44,6 +46,7 @@ def individual_new(request):
     else:
         form = IndividualForm()
     return render(request, 'individual_edit.html', {'form': form})
+
 
 @login_required(login_url='/login/')
 def individual_edit(request, pk):
@@ -58,9 +61,11 @@ def individual_edit(request, pk):
         form = IndividualForm(instance=individual)
     return render(request, 'individual_edit.html', {'form': form})
 
+
 def user_logout(request):
     logout(request)
     return render(request, 'logout.html', {})
+
 
 def home(request):
     return render(request, 'home.html', {})

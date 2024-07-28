@@ -3,21 +3,22 @@ from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 
+
 class ClassGroup(models.Model):
-    '''Класс (группа обучающихся).'''
+    """Класс (группа обучающихся)."""
     
     grade = models.IntegerField(_("Параллель"), default=0)
-    '''Параллель.'''
+    """Параллель."""
    
     label = models.CharField(_("Литера"), max_length=1, default='', blank=True, null=True)
-    '''Литера.'''
+    """Литера."""
        
     class Meta:
         verbose_name = _("Класс")
         verbose_name_plural = _("Классы")
 
     def __str__(self):
-       if self.label in (x for x in '0123456789'):
-           return f'{self.grade}-{self.label}'
-       else:
-           return f'{self.grade} {self.label}'
+        if self.label in (x for x in '0123456789'):
+            return f'{self.grade}-{self.label}'
+        else:
+            return f'{self.grade} {self.label}'

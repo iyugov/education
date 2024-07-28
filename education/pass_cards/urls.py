@@ -2,7 +2,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-
     path('pass_cards/pass_card_action/list/', views.pass_card_action_list, name='pass_card_action_list'),
     path('pass_cards/pass_card_action/new/', views.pass_card_action_new, name='pass_card_action_new'),
     path('pass_cards/pass_card_action/<int:pk>/edit/', views.pass_card_action_edit, name='pass_card_action_edit'),

@@ -7,17 +7,18 @@ from django.utils.timezone import now
 
 # Create your models here.
 
+
 def pass_id_validator(pass_id: str | None) -> None:
-    '''Проверка корректности идентификатора карты.'''
+    """Проверка корректности идентификатора карты."""
     if pass_id is None or not fullmatch('[0-9][0-9][0-9],[0-9][0-9][0-9][0-9][0-9]', pass_id):
         raise ValidationError('Некорректный идентификатор: не соответствует шаблону "NNN,NNNNN".')
-        return
     pass_id_parts = tuple(map(int, pass_id.split(',')))
     if pass_id_parts[0] > 255 or pass_id_parts[1] > 65535:
         raise ValidationError('Некорректный идентификатор: числовое значение вне допустимого диапазона.')
 
+
 class PassCardType(models.Model):
-    '''Тип пропускной карты.'''
+    """Тип пропускной карты."""
 
     title = models.CharField(_('Наименование'), max_length=50, unique=True)
     '''Наименование.'''
@@ -27,10 +28,11 @@ class PassCardType(models.Model):
         verbose_name_plural = _('Типы пропускных карт')
 
     def __str__(self):
-       return self.title
+        return self.title
+
 
 class PassCardAction(models.Model):
-    '''Тип пропускной карты.'''
+    """Тип пропускной карты."""
 
     title = models.CharField(_('Наименование'), max_length=50, unique=True)
     '''Наименование.'''
@@ -40,10 +42,11 @@ class PassCardAction(models.Model):
         verbose_name_plural = _('Действие с картами')
 
     def __str__(self):
-       return self.title
+        return self.title
+
 
 class PassCard(models.Model):
-    '''Пропускная карта.'''
+    """Пропускная карта."""
 
     pass_id = models.CharField(_('Идентификатор'), validators=[pass_id_validator], max_length=9)
     '''Идентификатор.'''
@@ -56,10 +59,11 @@ class PassCard(models.Model):
         verbose_name_plural = _('Пропускные карты')
 
     def __str__(self):
-       return self.pass_id
+        return self.pass_id
+
 
 class PassCardIssue(models.Model):
-    '''Оформление карты.'''
+    """Оформление карты."""
 
     issue_date = models.DateField(_('Дата оформления'), default=now)
     '''Дата рождения.'''
@@ -75,11 +79,10 @@ class PassCardIssue(models.Model):
     
     action = models.ForeignKey(PassCardAction, null=True, on_delete=models.PROTECT, verbose_name='Действие')
     '''Действие.'''
-    
-    
+
     class Meta:
         verbose_name = _('Оформление карты')
         verbose_name_plural = _('Оформление карт')
 
     def __str__(self):
-       return f'{self.issue_date:%d.%m.%Y}: {self.individual} ({self.card})'
+        return f'{self.issue_date:%d.%m.%Y}: {self.individual} ({self.card})'
