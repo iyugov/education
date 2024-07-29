@@ -21,6 +21,14 @@ class Student(models.Model):
         return f'{self.individual.title_without_status}'
 
     @property
+    def class_group(self):
+        last_class_group_enrollment = self.class_group_enrollments.order_by('-enrollment_date').first()
+        if last_class_group_enrollment:
+            return f'{last_class_group_enrollment.class_group}'
+        else:
+            return ''
+
+    @property
     def title_with_status(self):
         last_class_group_enrollment = self.class_group_enrollments.order_by('-enrollment_date').first()
         if last_class_group_enrollment:

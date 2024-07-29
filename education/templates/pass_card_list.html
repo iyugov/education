@@ -9,14 +9,12 @@
         <tr>
             <th>Идентификатор</th>
             <th>Тип</th>
-            <th>Ред.</th>
             <th>Удал.</th>
         </tr>
     {% for pass_card in pass_card_list %}
-        <tr class="{% cycle 'odd' 'even' %}">
+        <tr class="{% cycle 'odd' 'even' %}" onclick="window.location.href='{% url 'pass_card_edit' pass_card.pk %}'">
             <td class="cell-label">{{ pass_card.pass_id }}</td>
             <td class="cell-text">{{ pass_card.pass_type }}</td>
-            <td class="cell-button"><a href="{% url 'pass_card_edit' pass_card.pk %}"><img class="action-icon" src="{% static 'icons/edit.png' %}" alt="Изменить"></a></td>
             <td class="cell-button"><a href="{% url 'pass_card_delete' pass_card.pk %}"><img class="action-icon" src="{% static 'icons/delete.png' %}" alt="Удалить"></a></td>
         </tr>
     {% endfor %}

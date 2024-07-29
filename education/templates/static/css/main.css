@@ -46,6 +46,10 @@ footer a {
     border: 1px solid #999;
 }
 
+.catalog-items tr {
+    cursor: pointer;
+}
+
 .catalog-items th {
     background-color: #80ff80;
     font-weight: bold;

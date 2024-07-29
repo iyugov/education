@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import ValidationError
 from re import fullmatch
 
+
 def social_insurance_number_validator(number: str | None) -> None:
     """Проверка корректности СНИЛС."""
     if number is None or number.strip() == '':
@@ -77,6 +78,15 @@ class Individual(models.Model):
                 result += f' ({last_class_group_enrollment.class_group})'
         return result.strip()
 
-
     def __str__(self):
         return f'{self.title_with_status}'
+
+
+class ContactInfoType(models.Model):
+    """Тип контактной информации."""
+
+    title = models.CharField(_("Наименование"), max_length=50, unique=True)
+    """Наименование."""
+
+    def __str__(self):
+        return self.title

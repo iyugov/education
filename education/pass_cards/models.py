@@ -48,7 +48,7 @@ class PassCardAction(models.Model):
 class PassCard(models.Model):
     """Пропускная карта."""
 
-    pass_id = models.CharField(_('Идентификатор'), validators=[pass_id_validator], max_length=9)
+    pass_id = models.CharField(_('Идентификатор'), validators=[pass_id_validator], max_length=9, unique=True)
     '''Идентификатор.'''
 
     pass_type = models.ForeignKey(PassCardType, null=True, on_delete=models.RESTRICT, verbose_name='Тип')

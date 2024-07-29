@@ -8,13 +8,11 @@
     <table class="catalog-items">
         <tr>
             <th>Наименование</th>
-            <th>Ред.</th>
             <th>Удал.</th>
         </tr>
     {% for pass_card_action in pass_card_action_list %}
-        <tr class="{% cycle 'odd' 'even' %}">
+        <tr class="{% cycle 'odd' 'even' %}" onclick="window.location.href='{% url 'pass_card_action_edit' pass_card_action.pk %}'">
             <td class="cell-text">{{ pass_card_action.title }}</td>
-            <td class="cell-button"><a href="{% url 'pass_card_action_edit' pass_card_action.pk %}"><img class="action-icon" src="{% static 'icons/edit.png' %}" alt="Изменить"></a></td>
             <td class="cell-button"><a href="{% url 'pass_card_action_delete' pass_card_action.pk %}"><img class="action-icon" src="{% static 'icons/delete.png' %}" alt="Удалить"></a></td>
         </tr>
     {% endfor %}

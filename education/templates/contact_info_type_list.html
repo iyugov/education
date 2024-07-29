@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <h1>Типы контактной информации</h1>
+    <a href="{% url 'contact_info_type_new' %}"><img class="action-icon" src="{% static 'icons/add.png' %}" alt="Создать"></a>
+    <table class="catalog-items">
+        <tr>
+            <th>Наименование</th>
+            <th>Удал.</th>
+        </tr>
+    {% for contact_info_type in contact_info_type_list %}
+        <tr class="{% cycle 'odd' 'even' %}" onclick="window.location.href='{% url 'contact_info_type_edit' contact_info_type.pk %}'">
+            <td class="cell-text">{{ contact_info_type }}</td>
+            <td class="cell-button"><a href="{% url 'contact_info_type_delete' contact_info_type.pk %}"><img class="action-icon" src="{% static 'icons/delete.png' %}" alt="Удалить"></a></td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}
