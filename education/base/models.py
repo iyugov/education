@@ -3,7 +3,6 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import ValidationError
 from re import fullmatch
 
-
 def social_insurance_number_validator(number: str | None) -> None:
     """Проверка корректности СНИЛС."""
     if number is None or number.strip() == '':
@@ -56,15 +55,28 @@ class Individual(models.Model):
     )
     '''СНИЛС.'''
 
-    is_student = models.BooleanField(_("Обучающийся"), default=False)
-    '''Является ли обучающимся.'''
-
     class Meta:
         verbose_name = _("Физическое лицо")
         verbose_name_plural = _("Физические лица")
 
-    def __str__(self):
+    @property
+    def title_without_status(self):
         result = f'{self.last_name} {self.first_name}'
         if self.patronymic != '':
             result += f' {self.patronymic}'
         return result.strip()
+
+    @property
+    def title_with_status(self):
+        result = f'{self.last_name} {self.first_name}'
+        if self.patronymic != '':
+            result += f' {self.patronymic}'
+        if hasattr(self, 'student'):
+            last_class_group_enrollment = self.student.class_group_enrollments.order_by('-enrollment_date').first()
+            if last_class_group_enrollment:
+                result += f' ({last_class_group_enrollment.class_group})'
+        return result.strip()
+
+
+    def __str__(self):
+        return f'{self.title_with_status}'

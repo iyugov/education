@@ -15,7 +15,7 @@
         </tr>
     {% for class_group_enrollment in class_group_enrollment_list %}
         <tr class="{% cycle 'odd' 'even' %}">
-            <td class="cell-label">{{ class_group_enrollment.student }}</td>
+            <td class="cell-text">{{ class_group_enrollment.student }}</td>
             <td class="cell-label">{{ class_group_enrollment.class_group }}</td>
             <td class="cell-label">{{ class_group_enrollment.enrollment_date | date:"d.m.Y" }}</td>
             <td class="cell-button"><a href="{% url 'class_group_enrollment_edit' class_group_enrollment.pk %}"><img class="action-icon" src="{% static 'icons/edit.png' %}" alt="Изменить"></a></td>

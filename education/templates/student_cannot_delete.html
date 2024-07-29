@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Невозможно удалить обучающегося</h1>
+    <p>Обучающйся "{{ student }}" используется:</p>
+    <ul>
+        {% if class_group_enrollment_list %}
+        <li>в зачислениях в классы:
+            <ul>
+                {% for class_group_enrollment in class_group_enrollment_list %}
+                <li>{{ class_group_enrollment }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endif %}
+    </ul> 
+    <form method="post">
+        {% csrf_token %}
+    </form>
+    <a href="{% url 'student_list' %}">Возврат</a>
+{% endblock %}

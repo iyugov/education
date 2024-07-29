@@ -5,8 +5,58 @@ from django.views.generic.edit import DeleteView
 
 # Create your views here.
 
-from .models import ClassGroup, ClassGroupEnrollment
-from .forms import ClassGroupForm, ClassGroupEnrollmentForm
+from .models import Student, ClassGroup, ClassGroupEnrollment
+from .forms import StudentForm, ClassGroupForm, ClassGroupEnrollmentForm
+
+
+class StudentDelete(DeleteView):
+    model = Student
+    success_url = reverse_lazy('student_list')
+    template_name = 'student_confirm_delete.html'
+
+    def get(self, request, *args, **kwargs):
+        student = self.get_object()
+        class_group_enrollments = []
+        dependencies = ClassGroupEnrollment.objects.filter(student=student)
+        if dependencies.exists():
+            class_group_enrollments = [str(dependency) for dependency in dependencies]
+        if class_group_enrollments:
+            return render(request, 'student_cannot_delete.html',
+                          {'student': student, 'class_group_enrollment_list': class_group_enrollments})
+        return super().get(request, *args, **kwargs)
+
+
+@login_required(login_url='/login/')
+def student_list(request):
+    students = Student.objects.all()
+    return render(request, 'student_list.html', {'student_list': students})
+
+
+@login_required(login_url='/login/')
+def student_new(request):
+    if request.method == "POST":
+        form = StudentForm(request.POST)
+        if form.is_valid():
+            student = form.save(commit=False)
+            student.save()
+            return redirect('student_list')
+    else:
+        form = StudentForm()
+    return render(request, 'student_edit.html', {'form': form})
+
+
+@login_required(login_url='/login/')
+def student_edit(request, pk):
+    student = get_object_or_404(Student, pk=pk)
+    if request.method == 'POST':
+        form = StudentForm(request.POST, instance=student)
+        if form.is_valid():
+            student = form.save(commit=False)
+            student.save()
+            return redirect('student_list')
+    else:
+        form = StudentForm(instance=student)
+    return render(request, 'student_edit.html', {'form': form})
 
 
 class ClassGroupDelete(DeleteView):

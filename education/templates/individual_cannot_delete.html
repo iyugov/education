@@ -5,7 +5,7 @@
     <p>Физическое лицо "{{ individual }}" используется:</p>
     <ul>
         {% if pass_card_issue_list %}
-        <li>в оформлениях:
+        <li>в оформлениях пропускных карт:
             <ul>
                 {% for pass_card_issue in pass_card_issue_list %}
                 <li>{{ pass_card_issue }}</li>
@@ -13,11 +13,11 @@
             </ul>
         </li>
         {% endif %}
-        {% if class_group_enrollment_list %}
-        <li>в зачислениях:
+        {% if student_list %}
+        <li>в обучающихся:
             <ul>
-                {% for class_group_enrollment in class_group_enrollment_list %}
-                <li>{{ class_group_enrollment }}</li>
+                {% for student in student_list %}
+                <li>{{ student }}</li>
                 {% endfor %}
             </ul>
         </li>

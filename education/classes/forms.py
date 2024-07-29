@@ -1,5 +1,11 @@
 from django import forms
-from .models import ClassGroup, ClassGroupEnrollment
+from .models import Student, ClassGroup, ClassGroupEnrollment
+
+
+class StudentForm(forms.ModelForm):
+    class Meta:
+        model = Student
+        fields = ['individual']
 
 
 class ClassGroupForm(forms.ModelForm):

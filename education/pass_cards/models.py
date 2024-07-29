@@ -39,7 +39,7 @@ class PassCardAction(models.Model):
        
     class Meta:
         verbose_name = _('Действие с картами')
-        verbose_name_plural = _('Действие с картами')
+        verbose_name_plural = _('Действия с картами')
 
     def __str__(self):
         return self.title

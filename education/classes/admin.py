@@ -2,7 +2,12 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import ClassGroup, ClassGroupEnrollment
+from .models import Student, ClassGroup, ClassGroupEnrollment
+
+
+@admin.register(Student)
+class StudentAdmin(admin.ModelAdmin):
+    list_display = ('individual', )
 
 
 @admin.register(ClassGroup)
