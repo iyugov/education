@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'base',
     'classes',
-    'pass_cards',
+    'pass_tags',
 ]
 
 MIDDLEWARE = [

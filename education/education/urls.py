@@ -29,5 +29,5 @@ urlpatterns = [
     path('logout/', views.user_logout, name='logout'),
     path('base/', include('base.urls')),
     path('classes/', include('classes.urls')),
-    path('pass_cards/', include('pass_cards.urls')),
+    path('pass_tags/', include('pass_tags.urls')),
 ]

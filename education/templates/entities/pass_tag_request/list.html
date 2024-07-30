@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <h1>Заявки на чипы</h1>
+    <div id="resizable-container" data-container-id="pass_tag_request-1">
+        <a href="{% url 'pass_tag_request_new' %}"><img class="action-icon" src="{% static 'icons/add.png' %}" alt="Создать"></a>
+        <table class="catalog-items display" id="myTable" data-table-id="pass_tag_request-1">
+            <thead>
+                <tr>
+                    <th class="resizable-th">Дата</th>
+                    <th class="resizable-th">Заявитель</th>
+                    <th class="resizable-th">Исполнитель</th>
+                    <th class="resizable-th">Комментарий</th>
+                    <th class="resizable-th">Удал.</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pass_tag_request in pass_tag_request_list %}
+                <tr class="{% cycle 'odd' 'even' %}" onclick="window.location.href='{% url 'pass_tag_request_edit' pass_tag_request.pk %}'">
+                    <td class="cell-date">{{ pass_tag_request.request_date | date:"d.m.Y" }}</td>
+                    <td class="cell-text">{{ pass_tag_request.requester }}</td>
+                    <td class="cell-text">{{ pass_tag_request.executor }}</td>
+                    <td class="cell-text">{{ pass_tag_request.comment }}</td>
+                    <td class="cell-button"><a href="{% url 'pass_tag_request_delete' pass_tag_request.pk %}"><img class="action-icon" src="{% static 'icons/delete.png' %}" alt="Удалить"></a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <h1>Чипы</h1>
+    <div id="resizable-container" data-container-id="pass_tag-1">
+        <a href="{% url 'pass_tag_new' %}"><img class="action-icon" src="{% static 'icons/add.png' %}" alt="Создать"></a>
+        <table class="catalog-items display" id="myTable" data-table-id="pass_tag-1">
+            <thead>
+                <tr>
+                    <th class="resizable-th">Идентификатор</th>
+                    <th class="resizable-th">Удал.</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pass_tag in pass_tag_list %}
+                <tr class="{% cycle 'odd' 'even' %}" onclick="window.location.href='{% url 'pass_tag_edit' pass_tag.pk %}'">
+                    <td class="cell-label">{{ pass_tag.tag_id }}</td>
+                    <td class="cell-button"><a href="{% url 'pass_tag_delete' pass_tag.pk %}"><img class="action-icon" src="{% static 'icons/delete.png' %}" alt="Удалить"></a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Удаление заявки на чипы</h1>
+    <p>Удалить заявку на чипы "{{ object }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Удалить</button>
+    </form>
+    <a href="{% url 'pass_tag_request_list' %}">Отменить</a>
+{% endblock %}

@@ -11,7 +11,7 @@ from django.forms import inlineformset_factory
 from .models import Individual, ContactInfoType, ContactInfoItem
 from .forms import IndividualForm, ContactInfoTypeForm, ContactInfoItemForm, CustomAuthForm
 
-from pass_cards.models import PassCardIssue
+from pass_tags.models import PassTagRequest
 from classes.models import Student
 
 
@@ -22,16 +22,27 @@ class IndividualDelete(DeleteView):
     
     def get(self, request, *args, **kwargs):
         individual = self.get_object()
-        pass_card_issues = []
-        dependencies = PassCardIssue.objects.filter(individual=individual)
+        pass_tag_requests_as_requester = []
+        dependencies = PassTagRequest.objects.filter(requester=individual)
         if dependencies.exists():
-            pass_card_issues = [str(dependency) for dependency in dependencies]
+            pass_tag_requests_as_requester = [str(dependency) for dependency in dependencies]
+        pass_tag_requests_as_executor = []
+        dependencies = PassTagRequest.objects.filter(executor=individual)
+        if dependencies.exists():
+            pass_tag_requests_as_executor = [str(dependency) for dependency in dependencies]
         students = []
         dependencies = Student.objects.filter(individual=individual)
         if dependencies.exists():
             students = [str(dependency) for dependency in dependencies]
-        if pass_card_issues or students:
-            return render(request, 'entities/individual/cannot_delete.html', {'username': request.user.username, 'individual': individual, 'pass_card_issue_list': pass_card_issues, 'student_list': students})
+        if pass_tag_requests_as_requester or pass_tag_requests_as_executor or students:
+            context = {
+                'username': request.user.username,
+                'individual': individual,
+                'pass_tag_request_requester_list': pass_tag_requests_as_requester,
+                'pass_tag_request_executor_list': pass_tag_requests_as_executor,
+                'student_list': students
+            }
+            return render(request, 'entities/individual/cannot_delete.html', context)
         return super().get(request, *args, **kwargs)
 
 
