@@ -88,5 +88,29 @@ class ContactInfoType(models.Model):
     title = models.CharField(_("Наименование"), max_length=50, unique=True)
     """Наименование."""
 
+    class Meta:
+        verbose_name = _("Тип контактной информации")
+        verbose_name_plural = _("Типы контактной информации")
+
     def __str__(self):
         return self.title
+
+
+class ContactInfoItem(models.Model):
+    """Единица контактной информации."""
+
+    individual = models.ForeignKey(Individual, on_delete=models.CASCADE, verbose_name='Физическое лицо')
+    """Физическое лицо."""
+
+    contact_info_type = models.ForeignKey(ContactInfoType, on_delete=models.RESTRICT, verbose_name='Тип')
+    """Тип."""
+
+    value = models.CharField(_("Значение"), max_length=255)
+    """Значение."""
+
+    class Meta:
+        verbose_name = _("Элемент контактной информации")
+        verbose_name_plural = _("Элементы контактной информации")
+
+    def __str__(self):
+        return f'{self.individual.title_without_status}: {self.contact_info_type} - {self.value}'

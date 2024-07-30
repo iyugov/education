@@ -7,6 +7,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Система "Образование"{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+    <!-- Подключение CSS DataTables -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"/>
+    <!-- Подключение jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Подключение JavaScript DataTables -->
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <!-- Подключение jQuery UI -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
 </head>
 <body>
     <header>
@@ -54,5 +65,112 @@
     <footer>
         <p><a href="mailto:iyugov@gmail.com">&copy; 2024 Югов И. О.</a></p>
     </footer>
+    <script>
+        $(document).ready(function() {
+
+            $('#myTable').DataTable({
+                language: {
+                    "decimal":        "",
+                    "emptyTable":     "Нет данных в таблице",
+                    "info":           "Показано от _START_ до _END_ из _TOTAL_ записей",
+                    "infoEmpty":      "Показано от 0 до 0 из 0 записей",
+                    "infoFiltered":   "(отфильтровано из _MAX_ записей)",
+                    "infoPostFix":    "",
+                    "thousands":      " ",
+                    "lengthMenu":     "Показать _MENU_ записей",
+                    "loadingRecords": "Загрузка...",
+                    "processing":     "Обработка...",
+                    "search":         "Поиск:",
+                    "zeroRecords":    "Совпадающих записей не найдено",
+                    "paginate": {
+                        "first":      "Первая",
+                        "last":       "Последняя",
+                        "next":       "Следующая",
+                        "previous":   "Предыдущая"
+                    },
+                    "aria": {
+                        "sortAscending":  ": активировать для сортировки столбца по возрастанию",
+                        "sortDescending": ": активировать для сортировки столбца по убыванию"
+                    }
+                }
+            });
+
+            var username = $('#session-data').data('username');
+
+            // Получаем значение data-container-id
+            var containerId = $('#resizable-container').data('container-id');
+
+            // Функция для создания уникального ключа для контейнера с учетом имени пользователя
+            function getContainerStorageKey() {
+                return 'containerWidth-' + containerId + '-' + username;
+            }
+
+            // Функция сохранения ширины контейнера в localStorage
+            function saveContainerWidth() {
+                var containerWidth = $('#resizable-container').width();
+                localStorage.setItem(getContainerStorageKey(), containerWidth);
+            }
+
+            // Функция загрузки ширины контейнера из localStorage
+            function loadContainerWidth() {
+                var containerWidth = localStorage.getItem(getContainerStorageKey());
+                if (containerWidth) {
+                    $('#resizable-container').css('width', containerWidth + 'px');
+                }
+            }
+
+            // Загрузка ширины контейнера при загрузке страницы
+            loadContainerWidth();
+
+            // Сделать контейнер изменяемым
+            $('#resizable-container').resizable({
+                handles: 'e',
+                minWidth: 100,
+                stop: function(event, ui) {
+                    // Сохранение ширины при изменении
+                    saveContainerWidth();
+                }
+            });
+
+            var tableId = $('#myTable').data('table-id');
+
+            // Функция для создания уникального ключа для ширины столбцов таблицы
+            function getTableStorageKey(colIndex) {
+                return 'tableWidth-' + tableId + '-col-' + colIndex + '-' + username;
+            }
+
+            // Функция сохранения ширины столбцов таблицы в localStorage
+            function saveColumnWidths() {
+                $('#myTable').find('th').each(function(index) {
+                    var width = $(this).outerWidth();
+                    localStorage.setItem(getTableStorageKey(index), width);
+                });
+            }
+
+            // Функция загрузки ширины столбцов таблицы из localStorage
+            function loadColumnWidths() {
+                $('#myTable').find('th').each(function(index) {
+                    var width = localStorage.getItem(getTableStorageKey(index));
+                    if (width) {
+                        $(this).css('width', width + 'px');
+                    }
+                });
+            }
+
+            // Загрузка ширины столбцов таблицы при загрузке страницы
+            loadColumnWidths();
+
+            // Сделать столбцы изменяемыми
+            $('#myTable').find('th').resizable({
+                handles: 'e',
+                minWidth: 10,
+                stop: function(event, ui) {
+                    // Сохранение ширины столбцов при изменении
+                    saveColumnWidths();
+                }
+            });
+
+        });
+    </script>
 </body>
 </html>

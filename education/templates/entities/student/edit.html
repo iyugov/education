@@ -2,9 +2,14 @@
 
 {% block content %}
     <h1>{% if form.instance.pk %}Редактирование{% else %}Создание{% endif %} обучающегося</h1>
+    {% if form.instance.pk %}
+    <p>Физическое лицо для ранее созданного обучающегося "{{ form.instance }}" не подлежит изменению.</p>
+    {% else %}
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Сохранить</button>
     </form>
+    {% endif %}
+
 {% endblock %}

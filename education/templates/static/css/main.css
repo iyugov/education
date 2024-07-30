@@ -9,6 +9,7 @@ header {
     left: 0;
     width: 100%;
     border-style: none;
+    z-index: 1;
 }
 
 main {
@@ -30,6 +31,7 @@ footer {
     color: white;
     text-align: center;
     vertical-align: middle;
+    z-index: 1;
 }
 
 footer a {
@@ -46,7 +48,7 @@ footer a {
     border: 1px solid #999;
 }
 
-.catalog-items tr {
+.catalog-items tbody tr {
     cursor: pointer;
 }
 
@@ -58,14 +60,6 @@ footer a {
 
 .catalog-items td {
     text-align: left;
-}
-
-.catalog-items tbody tr:nth-child(odd) {
-    background-color: #d0ffd0;
-}
-
-.catalog-items tbody tr:nth-child(even) {
-    background-color: #e8ffe8;
 }
 
 .catalog-items tbody tr:hover {

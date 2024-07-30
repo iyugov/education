@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <div id="session-data" data-username="{{ username }}"></div>
+    <h1>Классы</h1>
+    <div id="resizable-container" data-container-id="class_group-1">
+        <a href="{% url 'class_group_new' %}"><img class="action-icon" src="{% static 'icons/add.png' %}" alt="Создать"></a>
+        <table class="catalog-items display" id="myTable" data-table-id="class_group-1">
+            <thead>
+                <tr>
+                    <th class="resizable-th">Класс</th>
+                    <th class="resizable-th">Удал.</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for class_group in class_group_list %}
+                <tr class="{% cycle 'odd' 'even' %}" onclick="window.location.href='{% url 'class_group_edit' class_group.pk %}'">
+                    <td class="cell-label">{{ class_group }}</td>
+                    <td class="cell-button"><a href="{% url 'class_group_delete' class_group.pk %}"><img class="action-icon" src="{% static 'icons/delete.png' %}" alt="Удалить"></a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% if form.instance.pk %}Редактирование{% else %}Создание{% endif %} физического лица</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <h2>Контактная информация</h2>
+        {% if form.instance.pk %}
+            {{ formset.management_form }}
+            <table>
+            {% for form in formset %}
+                <tr>
+                {% for hidden in form.hidden_fields %}
+                    <td>{{ hidden }}</td>
+                {% endfor %}
+                {% for field in form.visible_fields %}
+                    <td>
+                        {{ field.label_tag }}
+                        {{ field }}
+                        <div>
+                            {{ field.errors }}
+                        </div>
+                    </td>
+                {% endfor %}
+                </tr>
+            {% endfor %}
+            </table>
+        {% else %}
+            <p>Недоступно для новых объектов.</p>
+        {% endif %}
+        <button type="submit">Сохранить</button>
+    </form>
+
+{% endblock %}

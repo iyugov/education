@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Невозможно тип контактной информации</h1>
+    <p>Тип контактной информации "{{ contact_info_type }}" используется:</p>
+    <ul>
+        {% if contact_info_item_list %}
+        <li>в элементах контактной информации:
+            <ul>
+                {% for contact_info_item in contact_info_item_list %}
+                <li>{{ contact_info_item }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endif %}
+    </ul> 
+    <form method="post">
+        {% csrf_token %}
+    </form>
+    <a href="{% url 'contact_info_type_list' %}">Возврат</a>
+{% endblock %}
