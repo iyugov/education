@@ -15,7 +15,6 @@
                     <th class="resizable-th">Отчество</th>
                     <th class="resizable-th">Пол</th>
                     <th class="resizable-th">Дата рождения</th>
-                    <th class="resizable-th">СНИЛС</th>
                     <th class="resizable-th">Удал.</th>
                 </tr>
             </thead>
@@ -27,7 +26,6 @@
                 <td class="cell-text">{{ individual.patronymic }}</td>
                 <td class="cell-label">{{ individual.gender }}</td>
                 <td class="cell-date">{{ individual.birth_date | date:"d.m.Y"}}</td>
-                <td class="cell-label">{{ individual.social_insurance_number }}</td>
                 <td class="cell-button"><a href="{% url 'individual_delete' individual.pk %}"><img class="action-icon" src="{% static 'icons/delete.png' %}" alt="Удалить"></a></td>
             </tr>
             {% endfor %}

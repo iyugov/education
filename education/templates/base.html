@@ -48,7 +48,7 @@
                         <a href="{% url 'pass_card_issue_list' %}">Оформление</a>
                     </div>
                 </div>
-                <a href="{% url 'logout' %}">Выйти</a>
+                <a href="{% url 'logout' %}">({{ username }}) Выйти</a>
                 {% else %}
                 <a href="{% url 'login' %}">Войти</a>
                 {% endif %}
