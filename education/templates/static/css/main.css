@@ -2,6 +2,55 @@ body {
     font-family: Arial, sans-serif;
 }
 
+.login-container {
+    width: 300px;
+    margin: 100px auto;
+    padding: 30px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+}
+
+.login-container h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+    text-align: center;
+}
+
+.login-container label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+    text-align: center;
+}
+
+.login-container form {
+    width: 100%;
+}
+
+.login-container input[type="text"],
+.login-container input[type="password"] {
+    width: 100%;
+    padding: 10px 0;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.login-container button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: #5cb85c;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+.login-container button:hover {
+    background-color: #4cae4c;
+}
+
 header {
     display: block;
     position: fixed;
@@ -100,13 +149,17 @@ footer a {
   font-weight: bold;
 }
 
+.navbar #user-actions {
+  float: right;
+}
+
 .subnav {
   float: left;
   overflow: hidden;
 }
 
 .subnav .subnavbtn {
-  font-size: 16px;  
+  font-size: 16px;
   border: none;
   outline: none;
   color: white;

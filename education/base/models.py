@@ -31,30 +31,33 @@ class Individual(models.Model):
         ('M', 'Мужской'),
         ('-', 'Не указан'),
     ]
-    '''Пол (значения).'''
+    """Пол (значения)."""
 
-    last_name = models.CharField(_("Фамилия"), max_length=50)
-    '''Фамилия.'''
+    last_name = models.CharField(_('Фамилия'), max_length=50)
+    """Фамилия."""
 
-    first_name = models.CharField(_("Имя"), max_length=50)
-    '''Имя.'''
+    first_name = models.CharField(_('Имя'), max_length=50)
+    """Имя."""
 
-    patronymic = models.CharField(_("Отчество"), max_length=50, blank=True, null=True)
-    '''Отчество.'''
+    patronymic = models.CharField(_('Отчество'), max_length=50, blank=True, null=True)
+    """Отчество."""
 
-    gender = models.CharField(_("Пол"), max_length=1, choices=GENDER_CHOICES, default='-')
-    '''Пол.'''
+    gender = models.CharField(_('Пол'), max_length=1, choices=GENDER_CHOICES, default='-')
+    """Пол."""
 
-    birth_date = models.DateField(_("Дата рождения"), blank=True, null=True)
-    '''Дата рождения.'''
+    birth_date = models.DateField(_('Дата рождения'), blank=True, null=True)
+    """Дата рождения."""
 
     social_insurance_number = models.CharField(
-        _("СНИЛС"),
+        _('СНИЛС'),
         max_length=14,
         validators=[social_insurance_number_validator],
         blank=True, null=True, unique=True
     )
-    '''СНИЛС.'''
+    """СНИЛС."""
+
+    comment = models.CharField(_('Комментарий'), max_length=255, blank=True, null=True, default='')
+    """Комментарий."""
 
     class Meta:
         verbose_name = _("Физическое лицо")
@@ -107,6 +110,9 @@ class ContactInfoItem(models.Model):
 
     value = models.CharField(_("Значение"), max_length=255)
     """Значение."""
+
+    comment = models.CharField(_('Комментарий'), max_length=255, blank=True, null=True, default='')
+    """Комментарий."""
 
     class Meta:
         verbose_name = _("Элемент контактной информации")

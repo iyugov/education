@@ -50,9 +50,6 @@ class PassCard(models.Model):
 
     pass_id = models.CharField(_('Идентификатор'), validators=[pass_id_validator], max_length=9, unique=True)
     '''Идентификатор.'''
-
-    pass_type = models.ForeignKey(PassCardType, null=True, on_delete=models.RESTRICT, verbose_name='Тип')
-    '''Тип.'''
     
     class Meta:
         verbose_name = _('Пропускная карта')
@@ -70,6 +67,9 @@ class PassCardIssue(models.Model):
 
     card = models.ForeignKey(PassCard, null=True, on_delete=models.RESTRICT, verbose_name='Карта')
     """Карта."""
+
+    card_type = models.ForeignKey(PassCardType, null=True, on_delete=models.RESTRICT, verbose_name='Тип карты')
+    '''Тип.'''
 
     individual = models.ForeignKey(Individual, null=True, on_delete=models.PROTECT, verbose_name='Физическое лицо')
     """Физическое лицо."""

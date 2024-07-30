@@ -5,10 +5,10 @@
     <p>Тип пропускной карты "{{ pass_card_type }}" используется:</p>
     <ul>
         {% if pass_card_list %}
-        <li>в картах:
+        <li>в оформлениях:
             <ul>
-                {% for pass_card in pass_card_list %}
-                <li>{{ pass_card }}</li>
+                {% for pass_card_issue in pass_card_issue_list %}
+                <li>{{ pass_card_issue }}</li>
                 {% endfor %}
             </ul>
         </li>

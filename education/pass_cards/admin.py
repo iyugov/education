@@ -21,13 +21,13 @@ class PassCardActionAdmin(admin.ModelAdmin):
 
 @admin.register(PassCard)
 class PassCardAdmin(admin.ModelAdmin):
-    list_display = ('pass_id', 'pass_type')
-    list_display_links = ('pass_id', 'pass_type')
-    search_fields = ('pass_id', 'pass_type')
+    list_display = ('pass_id', )
+    list_display_links = ('pass_id', )
+    search_fields = ('pass_id', )
 
 
 @admin.register(PassCardIssue)
 class PassCardIssueAdmin(admin.ModelAdmin):
-    list_display = ('issue_date', 'card', 'individual', 'description', 'action')
-    list_display_links = ('issue_date', 'card', 'individual', 'description', 'action')
-    search_fields = ('issue_date', 'card', 'individual', 'description', 'action')
+    list_display = ('issue_date', 'card', 'card_type', 'individual', 'description', 'action')
+    list_display_links = ('issue_date', 'card', 'card_type', 'individual', 'description', 'action')
+    search_fields = ('issue_date', 'card', 'card_type', 'individual', 'description', 'action')

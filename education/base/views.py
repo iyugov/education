@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import logout
+from django.contrib.auth import logout, views as auth_views
 from django.urls import reverse_lazy
 from django.views.generic.edit import DeleteView
 from django.forms import inlineformset_factory
@@ -9,7 +9,7 @@ from django.forms import inlineformset_factory
 # Create your views here.
 
 from .models import Individual, ContactInfoType, ContactInfoItem
-from .forms import IndividualForm, ContactInfoTypeForm, ContactInfoItemForm
+from .forms import IndividualForm, ContactInfoTypeForm, ContactInfoItemForm, CustomAuthForm
 
 from pass_cards.models import PassCardIssue
 from classes.models import Student
@@ -123,10 +123,15 @@ def contact_info_type_edit(request, pk):
     return render(request, 'entities/contact_info_type/edit.html', {'username': request.user.username, 'form': form})
 
 
+class CustomLoginView(auth_views.LoginView):
+    authentication_form = CustomAuthForm
+
+
 def user_logout(request):
     logout(request)
-    return render(request, 'logout.html', {})
+    return redirect('login')
 
 
 def home(request):
-    return render(request, 'home.html', {})
+    return render(request, 'base.html', {'username': request.user.username})
+

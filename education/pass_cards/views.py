@@ -70,12 +70,12 @@ class PassCardTypeDelete(DeleteView):
     
     def get(self, request, *args, **kwargs):
         pass_card_type = self.get_object()
-        pass_cards = []
-        dependencies = PassCard.objects.filter(pass_type=pass_card_type)
+        pass_card_issues = []
+        dependencies = PassCardIssue.objects.filter(card_type=pass_card_type)
         if dependencies.exists():
-            pass_cards = [str(dependency) for dependency in dependencies]
-        if pass_cards:
-            return render(request, 'entities/pass_card_type/cannot_delete.html', {'username': request.user.username, 'pass_card_type': pass_card_type, 'pass_card_list': pass_cards})
+            pass_card_issues = [str(dependency) for dependency in dependencies]
+        if pass_card_issues:
+            return render(request, 'entities/pass_card_type/cannot_delete.html', {'username': request.user.username, 'pass_card_type': pass_card_type, 'pass_card_issue_list': pass_card_issues})
         return super().get(request, *args, **kwargs)
 
 

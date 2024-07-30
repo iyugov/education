@@ -3,7 +3,6 @@
 {% load static %}
 
 {% block content %}
-    <div id="session-data" data-username="{{ username }}"></div>
     <h1>Зачисления обучающихся в классы</h1>
     <div id="resizable-container" data-container-id="class_group_enrollment-1">
         <a href="{% url 'class_group_enrollment_new' %}"><img class="action-icon" src="{% static 'icons/add.png' %}" alt="Создать"></a>

@@ -17,9 +17,9 @@
     <!-- Подключение jQuery UI -->
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
 </head>
 <body>
+    <div id="session-data" data-username="{{ username }}"></div>
     <header>
         <nav>
             <div class="navbar">
@@ -45,10 +45,23 @@
                         <a href="{% url 'pass_card_type_list' %}">Типы</a>
                         <a href="{% url 'pass_card_action_list' %}">Действия</a>
                         <a href="{% url 'pass_card_list' %}">Карты</a>
-                        <a href="{% url 'pass_card_issue_list' %}">Оформление</a>
+                        <a href="{% url 'pass_card_issue_list' %}">Оформления</a>
                     </div>
                 </div>
-                <a href="{% url 'logout' %}">({{ username }}) Выйти</a>
+                <div class="subnav">
+                    <button class="subnavbtn">Транспортные карты<i class="fa fa-caret-down"></i></button>
+                    <div class="subnav-content">
+                        <a href="">Действия</a>
+                        <a href="">Карты</a>
+                        <a href="">Оформления</a>
+                    </div>
+                </div>
+                <div class="subnav" id="user-actions">
+                    <button class="subnavbtn">{{ username }}<i class="fa fa-caret-down"></i></button>
+                    <div class="subnav-content">
+                        <a href="{% url 'logout' %}">Выйти</a>
+                    </div>
+                </div>
                 {% else %}
                 <a href="{% url 'login' %}">Войти</a>
                 {% endif %}
@@ -72,8 +85,8 @@
                 language: {
                     "decimal":        "",
                     "emptyTable":     "Нет данных в таблице",
-                    "info":           "Показано от _START_ до _END_ из _TOTAL_ записей",
-                    "infoEmpty":      "Показано от 0 до 0 из 0 записей",
+                    "info":           "Показаны записи _START_-_END_, всего _TOTAL_",
+                    "infoEmpty":      "Показаны записи 0-0, всего 0",
                     "infoFiltered":   "(отфильтровано из _MAX_ записей)",
                     "infoPostFix":    "",
                     "thousands":      " ",

@@ -3,7 +3,6 @@
 {% load static %}
 
 {% block content %}
-    <div id="session-data" data-username="{{ username }}"></div>
     <h1>Действия с пропускными картами</h1>
     <div id="resizable-container" data-container-id="pass_card_action-1">
         <a href="{% url 'pass_card_action_new' %}"><img class="action-icon" src="{% static 'icons/add.png' %}" alt="Создать"></a>
