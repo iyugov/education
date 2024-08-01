@@ -29,7 +29,7 @@
         {% else %}
             <p>Недоступно для новых объектов.</p>
         {% endif %}
-        <button type="submit">Сохранить</button>
+        <button type="submit" class="catalog-action">Сохранить</button>
     </form>
-
+    <a href="{{ back_url }}"><button class="catalog-action">Отменить</button></a>
 {% endblock %}

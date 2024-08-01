@@ -26,10 +26,13 @@ def social_insurance_number_validator(number: str | None) -> None:
 class Individual(models.Model):
     """Физическое лицо."""
 
+    GENDER_FEMALE = 'F'
+    GENDER_MALE = 'М'
+    GENDER_NOT_SPECIFIED = '-'
     GENDER_CHOICES = [
-        ('Ж', 'Женский'),
-        ('M', 'Мужской'),
-        ('-', 'Не указан'),
+        (GENDER_FEMALE, 'Женский'),
+        (GENDER_MALE, 'Мужской'),
+        (GENDER_NOT_SPECIFIED, 'Не указан'),
     ]
     """Пол (значения)."""
 
@@ -56,7 +59,7 @@ class Individual(models.Model):
     )
     """СНИЛС."""
 
-    comment = models.CharField(_('Комментарий'), max_length=255, blank=True, null=True, default='')
+    comment = models.CharField(_('Комментарий'), max_length=255, blank=True, default='')
     """Комментарий."""
 
     class Meta:

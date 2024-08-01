@@ -4,12 +4,14 @@
     <h1>{% if form.instance.pk %}Редактирование{% else %}Создание{% endif %} обучающегося</h1>
     {% if form.instance.pk %}
     <p>Физическое лицо для ранее созданного обучающегося "{{ form.instance }}" не подлежит изменению.</p>
+<a href="{{ back_url }}"><button class="catalog-action">Возврат</button></a>
     {% else %}
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Сохранить</button>
+        <button type="submit" class="catalog-action">Сохранить</button>
     </form>
+    <a href="{{ back_url }}"><button class="catalog-action">Отменить</button></a>
     {% endif %}
 
 {% endblock %}

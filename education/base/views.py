@@ -5,33 +5,37 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import DeleteView
 from django.forms import inlineformset_factory
 
-
 # Create your views here.
 
 from .models import Individual, ContactInfoType, ContactInfoItem
 from .forms import IndividualForm, ContactInfoTypeForm, ContactInfoItemForm, CustomAuthForm
-
-from pass_cards.models import PassCardIssue
-from classes.models import Student
+from education.metadata import get_dependencies
 
 
 class IndividualDelete(DeleteView):
     model = Individual
     success_url = reverse_lazy('individual_list')
-    template_name = 'entities/individual/confirm_delete.html'
-    
+    template_name = 'object_confirm_delete.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object'] = self.get_object()
+        context['object_verbose_name'] = self.model._meta.verbose_name
+        context['back_url'] = self.success_url
+        return context
+
     def get(self, request, *args, **kwargs):
-        individual = self.get_object()
-        pass_card_issues = []
-        dependencies = PassCardIssue.objects.filter(individual=individual)
-        if dependencies.exists():
-            pass_card_issues = [str(dependency) for dependency in dependencies]
-        students = []
-        dependencies = Student.objects.filter(individual=individual)
-        if dependencies.exists():
-            students = [str(dependency) for dependency in dependencies]
-        if pass_card_issues or students:
-            return render(request, 'entities/individual/cannot_delete.html', {'username': request.user.username, 'individual': individual, 'pass_card_issue_list': pass_card_issues, 'student_list': students})
+        object_to_delete = self.get_object()
+        dependencies = get_dependencies(object_to_delete)
+        context = {
+            'username': request.user.username,
+            'object': object_to_delete,
+            'object_verbose_name': self.model._meta.verbose_name,
+            'dependencies': dependencies,
+            'back_url': self.success_url
+        }
+        if dependencies != {}:
+            return render(request, 'object_cannot_delete.html', context)
         return super().get(request, *args, **kwargs)
 
 
@@ -43,19 +47,23 @@ def individual_list(request):
 
 @login_required(login_url='/login/')
 def individual_new(request):
+    back_link = 'individual_list'
+    back_url = reverse_lazy(back_link)
     if request.method == "POST":
         form = IndividualForm(request.POST)
         if form.is_valid():
             individual = form.save(commit=False)
             individual.save()
-            return redirect('individual_list')
+            return redirect(back_link)
     else:
         form = IndividualForm()
-    return render(request, 'entities/individual/edit.html', {'username': request.user.username, 'form': form})
+    return render(request, 'entities/individual/edit.html', {'username': request.user.username, 'form': form, 'back_url': back_url})
 
 
 @login_required(login_url='/login/')
 def individual_edit(request, pk):
+    back_link = 'individual_list'
+    back_url = reverse_lazy(back_link)
     individual = get_object_or_404(Individual, pk=pk)
     ContactInfoItemFormSet = inlineformset_factory(
         Individual, ContactInfoItem, form=ContactInfoItemForm, extra=3, can_delete=True
@@ -67,26 +75,37 @@ def individual_edit(request, pk):
             individual = form.save(commit=False)
             individual.save()
             formset.save()
-            return redirect('individual_list')
+            return redirect(back_link)
     else:
         form = IndividualForm(instance=individual)
         formset = ContactInfoItemFormSet(instance=individual)
-    return render(request, 'entities/individual/edit.html', {'username': request.user.username, 'form': form, 'formset': formset})
+    return render(request, 'entities/individual/edit.html', {'username': request.user.username, 'form': form, 'formset': formset, 'back_url': back_url})
 
 
 class ContactInfoTypeDelete(DeleteView):
     model = ContactInfoType
     success_url = reverse_lazy('contact_info_type_list')
-    template_name = 'entities/contact_info_type/confirm_delete.html'
+    template_name = 'object_confirm_delete.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object'] = self.get_object()
+        context['object_verbose_name'] = self.model._meta.verbose_name
+        context['back_url'] = self.success_url
+        return context
 
     def get(self, request, *args, **kwargs):
-        contact_info_type = self.get_object()
-        contact_info_items = []
-        dependencies = ContactInfoItem.objects.filter(contact_info_type=contact_info_type)
-        if dependencies.exists():
-            contact_info_items = [str(dependency) for dependency in dependencies]
-        if contact_info_items:
-            return render(request, 'entities/contact_info_type/cannot_delete.html', {'username': request.user.username, 'contact_info_type': contact_info_type, 'contact_info_item_list': contact_info_items})
+        object_to_delete = self.get_object()
+        dependencies = get_dependencies(object_to_delete)
+        context = {
+            'username': request.user.username,
+            'object': object_to_delete,
+            'object_verbose_name': self.model._meta.verbose_name,
+            'dependencies': dependencies,
+            'back_url': self.success_url
+        }
+        if dependencies != {}:
+            return render(request, 'object_cannot_delete.html', context)
         return super().get(request, *args, **kwargs)
 
 
@@ -98,29 +117,33 @@ def contact_info_type_list(request):
 
 @login_required(login_url='/login/')
 def contact_info_type_new(request):
+    back_link = 'contact_info_type_list'
+    back_url = reverse_lazy(back_link)
     if request.method == "POST":
         form = ContactInfoTypeForm(request.POST)
         if form.is_valid():
             contact_info_type = form.save(commit=False)
             contact_info_type.save()
-            return redirect('contact_info_type_list')
+            return redirect(back_link)
     else:
         form = ContactInfoTypeForm()
-    return render(request, 'entities/contact_info_type/edit.html', {'username': request.user.username, 'form': form})
+    return render(request, 'entities/contact_info_type/edit.html', {'username': request.user.username, 'form': form, 'back_url': back_url})
 
 
 @login_required(login_url='/login/')
 def contact_info_type_edit(request, pk):
+    back_link = 'contact_info_type_list'
+    back_url = reverse_lazy(back_link)
     contact_info_type = get_object_or_404(ContactInfoType, pk=pk)
     if request.method == 'POST':
         form = ContactInfoTypeForm(request.POST, instance=contact_info_type)
         if form.is_valid():
             contact_info_type = form.save(commit=False)
             contact_info_type.save()
-            return redirect('contact_info_type_list')
+            return redirect(back_link)
     else:
         form = ContactInfoTypeForm(instance=contact_info_type)
-    return render(request, 'entities/contact_info_type/edit.html', {'username': request.user.username, 'form': form})
+    return render(request, 'entities/contact_info_type/edit.html', {'username': request.user.username, 'form': form, 'back_url': back_url})
 
 
 class CustomLoginView(auth_views.LoginView):
