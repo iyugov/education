@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Удаление невозможно</h1>
+    <p>{{ object_verbose_name }} "{{ object }}" используется в следующих объектах:</p>
+    <ul>
+        {% for model, objects in dependencies.items %}
+            <li>{{ model }}
+                <ul>
+                    {% for object_dict in objects %}
+                        <li>{{ object_dict.object }}
+                            <ul>
+                                {% for field_name, field_value in object_dict.fields.items %}
+                                    <li>{{ field_name }}: {{ field_value }}</li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+    <form method="post">
+        {% csrf_token %}
+    </form>
+    <a href="{{ back_url }}"><button class="catalog-action">Возврат</button></a>
+{% endblock %}

@@ -4,20 +4,22 @@
 
 {% block content %}
     <h1>Типы контактной информации</h1>
-    <div id="resizable-container" data-container-id="contact_info_type-1">
-        <a href="{% url 'contact_info_type_new' %}"><img class="action-icon" src="{% static 'icons/add.png' %}" alt="Создать"></a>
-        <table class="catalog-items display" id="myTable" data-table-id="contact_info_type-1">
+    <div class="catalog-container" style="max-width: 48em">
+        <a href="{% url 'contact_info_type_new' %}"></a>
+        <table class="table table-striped" id="dataTable" style="width: 100%">
             <thead>
                 <tr>
-                    <th class="resizable-th">Наименование</th>
-                    <th class="resizable-th">Удал.</th>
+                    <th width="16em">Наименование</th>
+                    <th width="20em">Действия</th>
                 </tr>
             </thead>
             <tbody>
                 {% for contact_info_type in contact_info_type_list %}
-                <tr class="{% cycle 'odd' 'even' %}" onclick="window.location.href='{% url 'contact_info_type_edit' contact_info_type.pk %}'">
-                    <td class="cell-text">{{ contact_info_type }}</td>
-                    <td class="cell-button"><a href="{% url 'contact_info_type_delete' contact_info_type.pk %}"><img class="action-icon" src="{% static 'icons/delete.png' %}" alt="Удалить"></a></td>
+                <tr>
+                    <td><a href="{% url 'contact_info_type_edit' contact_info_type.pk %}">{{ contact_info_type }}</a></td>
+                    <td>
+                        <a href="{% url 'contact_info_type_delete' contact_info_type.pk %}"><button class="catalog-action">Удалить</button></a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

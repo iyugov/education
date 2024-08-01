@@ -5,6 +5,43 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Сохранить</button>
+        <button type="submit" name="action" value="save" class="catalog-action">Сохранить</button>
+        <button type="submit" name="action" value="save-and-continue" class="catalog-action">Обновить таблицу</button>
+        {% if form.instance.pk %}
+            <div>
+                {{ formset.management_form }}
+                <table id="formset-area">
+                    <thead>
+                        <th style="display: none;"></th>
+                        <th>Держатель</th>
+                        <th>Причина</th>
+                        <th>Дата обработки</th>
+                        <th>Чип</th>
+                        <th>Статус</th>
+                    </thead>
+                    <tbody>
+                        {% for form in formset %}
+                            <tr class="formset-form">
+                                <td style="display: none;">
+                                    {% for hidden in form.hidden_fields %}
+                                        {{ hidden }}
+                                    {% endfor %}
+                                    {{ form.DELETE }}
+                                </td>
+                                <td>{{ form.holder }}{{ form.holder.errors }}</td>
+                                <td>{{ form.reason }}{{ form.reason.errors }}</td>
+                                <td>{{ form.processing_date }}{{ form.processing_date.errors }}</td>
+                                <td>{{ form.pass_tag }}{{ form.pass_tag.errors }}</td>
+                                <td>{{ form.status }}{{ form.status.errors }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        {% else %}
+            <p>Недоступно для новых объектов.</p>
+        {% endif %}
     </form>
+    <a href="{{ back_url }}"><button class="catalog-action">Отменить</button></a>
 {% endblock %}

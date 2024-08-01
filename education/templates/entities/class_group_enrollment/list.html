@@ -4,24 +4,26 @@
 
 {% block content %}
     <h1>Зачисления обучающихся в классы</h1>
-    <div id="resizable-container" data-container-id="class_group_enrollment-1">
-        <a href="{% url 'class_group_enrollment_new' %}"><img class="action-icon" src="{% static 'icons/add.png' %}" alt="Создать"></a>
-        <table class="catalog-items display" id="myTable" data-table-id="class_group_enrollment-1">
+    <div class="catalog-container" style="max-width: 48em">
+        <a href="{% url 'class_group_enrollment_new' %}"></a>
+        <table class="table table-striped" id="dataTable" style="width: 100%">
             <thead>
                 <tr>
-                    <th class="resizable-th">Обучающийся</th>
-                    <th class="resizable-th">Класс</th>
-                    <th class="resizable-th">Дата зачисления</th>
-                    <th class="resizable-th">Удал.</th>
+                    <th width="36em">Обучающийся</th>
+                    <th width="3em">Класс</th>
+                    <th width="6em">Дата зачисления</th>
+                    <th width="8em">Действия</th>
                 </tr>
             </thead>
             <tbody>
                 {% for class_group_enrollment in class_group_enrollment_list %}
-                <tr class="{% cycle 'odd' 'even' %}" onclick="window.location.href='{% url 'class_group_enrollment_edit' class_group_enrollment.pk %}'">
-                    <td class="cell-text">{{ class_group_enrollment.student }}</td>
-                    <td class="cell-label">{{ class_group_enrollment.class_group }}</td>
-                    <td class="cell-label">{{ class_group_enrollment.enrollment_date | date:"d.m.Y" }}</td>
-                    <td class="cell-button"><a href="{% url 'class_group_enrollment_delete' class_group_enrollment.pk %}"><img class="action-icon" src="{% static 'icons/delete.png' %}" alt="Удалить"></a></td>
+                <tr>
+                    <td><a href="{% url 'class_group_enrollment_edit' class_group_enrollment.pk %}">{{ class_group_enrollment.student }}</a></td>
+                    <td>{{ class_group_enrollment.class_group }}</td>
+                    <td data-order='{{ class_group_enrollment.enrollment_date | date:"Y-m-d"}}'>{{ class_group_enrollment.enrollment_date | date:"d.m.Y" }}</td>
+                    <td>
+                        <a href="{% url 'class_group_enrollment_delete' class_group_enrollment.pk %}"><button class="catalog-action">Удалить</button></a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

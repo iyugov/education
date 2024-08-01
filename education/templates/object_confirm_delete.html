@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Подтверждение удаления</h1>
+    <p>Удалить {{ object_verbose_name }} "{{ object }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="catalog-action">Удалить</button>
+    </form>
+    <a href="{{ back_url }}"><button class="catalog-action">Отменить</button></a>
+{% endblock %}

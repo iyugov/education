@@ -5,6 +5,7 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Сохранить</button>
+        <button type="submit" class="catalog-action">Сохранить</button>
     </form>
+    <a href="{{ back_url }}"><button class="catalog-action">Отменить</button></a>
 {% endblock %}
