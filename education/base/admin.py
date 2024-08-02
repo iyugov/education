@@ -2,12 +2,19 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Individual, ContactInfoType, ContactInfoItem
+from .models import Gender, Individual, ContactInfoType, ContactInfoItem
 
 
 class ContactInfoItemInline(admin.TabularInline):
     model = ContactInfoItem
-    extra = 3
+    extra = 1
+
+
+@admin.register(Gender)
+class GenderAdmin(admin.ModelAdmin):
+    list_display = ('title', )
+    list_display_links = ('title', )
+    search_fields = ('title', )
 
 
 @admin.register(Individual)

@@ -18,7 +18,7 @@
                 <tr>
                     <td><a href="{% url 'pass_tag_edit' pass_tag.pk %}">{{ pass_tag.tag_id }}</a></td>
                     <td>
-                        <a href="{% url 'pass_tag_delete' pass_tag.pk %}"><button class="catalog-action">Удалить</button></a>
+                        <a href="{% url 'pass_tag_delete' pass_tag.pk %}"><button class="btn btn-outline-danger btn-sm">Удалить</button></a>
                     </td>
                 </tr>
                 {% endfor %}

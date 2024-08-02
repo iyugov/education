@@ -18,7 +18,7 @@
                 <tr>
                     <td><a href="{% url 'contact_info_type_edit' contact_info_type.pk %}">{{ contact_info_type }}</a></td>
                     <td>
-                        <a href="{% url 'contact_info_type_delete' contact_info_type.pk %}"><button class="catalog-action">Удалить</button></a>
+                        <a href="{% url 'contact_info_type_delete' contact_info_type.pk %}"><button class="btn btn-outline-danger btn-sm">Удалить</button></a>
                     </td>
                 </tr>
                 {% endfor %}

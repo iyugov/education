@@ -107,7 +107,7 @@ def pass_tag_request_new(request):
             if request.POST.get('action') == 'save':
                 return redirect(back_link)
             else:
-                return redirect(back_link, pk=pass_tag_request.pk)
+                return redirect('pass_tag_request_edit', pk=pk)
     else:
         form = PassTagRequestForm()
     return render(request, 'entities/pass_tag_request/edit.html', {'username': request.user.username, 'form': form, 'back_url': back_url})
@@ -121,11 +121,13 @@ def pass_tag_request_edit(request, pk):
     PassTagRequestItemFormSet = inlineformset_factory(
         PassTagRequest, PassTagRequestItem, form=PassTagRequestItemForm, extra=1, can_delete=True
     )
+
     if request.method == 'POST':
         form = PassTagRequestForm(request.POST, instance=pass_tag_request)
         formset = PassTagRequestItemFormSet(request.POST, instance=pass_tag_request)
         for formset_item in formset:
             formset_item.fields['holder'].required = False
+        print(formset.errors)
         if form.is_valid() and formset.is_valid():
             pass_tag_request = form.save(commit=False)
             pass_tag_request.save()
@@ -142,7 +144,7 @@ def pass_tag_request_edit(request, pk):
             if request.POST.get('action') == 'save':
                 return redirect(back_link)
             else:
-                return redirect(back_link, pk=pk)
+                return redirect('pass_tag_request_edit', pk=pk)
     else:
         form = PassTagRequestForm(instance=pass_tag_request)
         formset = PassTagRequestItemFormSet(instance=pass_tag_request)

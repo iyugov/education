@@ -21,11 +21,12 @@ from base.views import CustomLoginView
 
 from base import views
 
+from education.settings.production import STATIC_URL, STATIC_ROOT
+
 urlpatterns = [
     path('', views.home, name='home'),
     path('admin/', admin.site.urls),
     path('login/', CustomLoginView.as_view(), name='login'),
-    # path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', views.user_logout, name='logout'),
     path('base/', include('base.urls')),
     path('classes/', include('classes.urls')),

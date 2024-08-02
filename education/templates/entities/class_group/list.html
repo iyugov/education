@@ -18,7 +18,7 @@
                 <tr>
                     <td><a href="{% url 'class_group_edit' class_group.pk %}">{{ class_group }}</a></td>
                     <td>
-                        <a href="{% url 'class_group_delete' class_group.pk %}"><button class="catalog-action">Удалить</button></a>
+                        <a href="{% url 'class_group_delete' class_group.pk %}"><button class="btn btn-outline-danger btn-sm">Удалить</button></a>
                     </td>
                 </tr>
                 {% endfor %}

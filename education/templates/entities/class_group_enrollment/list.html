@@ -22,7 +22,7 @@
                     <td>{{ class_group_enrollment.class_group }}</td>
                     <td data-order='{{ class_group_enrollment.enrollment_date | date:"Y-m-d"}}'>{{ class_group_enrollment.enrollment_date | date:"d.m.Y" }}</td>
                     <td>
-                        <a href="{% url 'class_group_enrollment_delete' class_group_enrollment.pk %}"><button class="catalog-action">Удалить</button></a>
+                        <a href="{% url 'class_group_enrollment_delete' class_group_enrollment.pk %}"><button class="btn btn-outline-danger btn-sm">Удалить</button></a>
                     </td>
                 </tr>
                 {% endfor %}

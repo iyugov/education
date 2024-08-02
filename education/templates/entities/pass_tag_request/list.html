@@ -20,7 +20,7 @@
                     <td data-order='{{ pass_tag_request.request_date | date:"Y-m-d"}}'><a href="{% url 'pass_tag_request_edit' pass_tag_request.pk %}">{{ pass_tag_request.request_date | date:"d.m.Y" }}</a></td>
                     <td>{{ pass_tag_request.comment }}</td>
                     <td>
-                        <a href="{% url 'pass_tag_request_delete' pass_tag_request.pk %}"><button class="catalog-action">Удалить</button></a>
+                        <a href="{% url 'pass_tag_request_delete' pass_tag_request.pk %}"><button class="btn btn-outline-danger btn-sm">Удалить</button></a>
                     </td>
                 </tr>
                 {% endfor %}

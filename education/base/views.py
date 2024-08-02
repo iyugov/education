@@ -66,16 +66,32 @@ def individual_edit(request, pk):
     back_url = reverse_lazy(back_link)
     individual = get_object_or_404(Individual, pk=pk)
     ContactInfoItemFormSet = inlineformset_factory(
-        Individual, ContactInfoItem, form=ContactInfoItemForm, extra=3, can_delete=True
+        Individual, ContactInfoItem, form=ContactInfoItemForm, extra=1, can_delete=True
     )
     if request.method == 'POST':
         form = IndividualForm(request.POST, instance=individual)
         formset = ContactInfoItemFormSet(request.POST, instance=individual)
+        for formset_item in formset:
+            formset_item.fields['contact_info_type'].required = False
+        print(formset.errors)
         if form.is_valid() and formset.is_valid():
+
             individual = form.save(commit=False)
             individual.save()
-            formset.save()
-            return redirect(back_link)
+            for formset_item in formset:
+                if formset_item.instance.pk and formset_item.cleaned_data['contact_info_type'] is None:
+                    formset_item.instance.delete()
+            items = formset.save()
+            for item in items:
+                if item.contact_info_type is None:
+                    item.delete()
+                else:
+                    item.individual = individual
+                    item.save()
+            if request.POST.get('action') == 'save':
+                return redirect(back_link)
+            else:
+                return redirect('individual_edit', pk=pk)
     else:
         form = IndividualForm(instance=individual)
         formset = ContactInfoItemFormSet(instance=individual)

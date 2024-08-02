@@ -5,7 +5,8 @@
     <p>Удалить {{ object_verbose_name }} "{{ object }}"?</p>
     <form method="post">
         {% csrf_token %}
-        <button type="submit" class="catalog-action">Удалить</button>
+        <a href="{{ back_url }}"><button type="button" class="btn btn-secondary">Отменить</button></a>
+        <button type="submit" class="btn btn-danger">Удалить</button>
     </form>
-    <a href="{{ back_url }}"><button class="catalog-action">Отменить</button></a>
+
 {% endblock %}

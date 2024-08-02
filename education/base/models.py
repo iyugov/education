@@ -22,19 +22,22 @@ def social_insurance_number_validator(number: str | None) -> None:
 
 # Create your models here.
 
+class Gender(models.Model):
+    """Пол."""
+
+    title = models.CharField(_("Наименование"), max_length=10, unique=True)
+    """Наименование."""
+
+    class Meta:
+        verbose_name = _("Значение пола")
+        verbose_name_plural = _("Значения пола")
+
+    def __str__(self):
+        return f'{self.title}'
+
 
 class Individual(models.Model):
     """Физическое лицо."""
-
-    GENDER_FEMALE = 'F'
-    GENDER_MALE = 'М'
-    GENDER_NOT_SPECIFIED = '-'
-    GENDER_CHOICES = [
-        (GENDER_FEMALE, 'Женский'),
-        (GENDER_MALE, 'Мужской'),
-        (GENDER_NOT_SPECIFIED, 'Не указан'),
-    ]
-    """Пол (значения)."""
 
     last_name = models.CharField(_('Фамилия'), max_length=50)
     """Фамилия."""
@@ -45,7 +48,7 @@ class Individual(models.Model):
     patronymic = models.CharField(_('Отчество'), max_length=50, blank=True, null=True)
     """Отчество."""
 
-    gender = models.CharField(_('Пол'), max_length=1, choices=GENDER_CHOICES, default='-')
+    gender = models.ForeignKey(Gender, on_delete=models.PROTECT, verbose_name='Пол')
     """Пол."""
 
     birth_date = models.DateField(_('Дата рождения'), blank=True, null=True)

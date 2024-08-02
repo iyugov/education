@@ -4,7 +4,7 @@
 
 {% block content %}
     <h1>Физические лица</h1>
-    <div class="catalog-container" style="max-width: 68em">
+    <div class="catalog-container" style="max-width: 72em">
         <a href="{% url 'individual_new' %}"></a>
         <table class="table table-striped" id="dataTable" style="width: 100%">
             <thead>
@@ -12,7 +12,7 @@
                     <th width="12em">Фамилия</th>
                     <th width="12em">Имя</th>
                     <th width="12em">Отчество</th>
-                    <th width="2em">Пол</th>
+                    <th width="6em">Пол</th>
                     <th width="6em">Дата рождения</th>
                     <th width="16em">Комментарий</th>
                     <th width="8em">Действия</th>
@@ -28,7 +28,7 @@
                 <td data-order='{{ individual.birth_date | date:"Y-m-d"}}'>{{ individual.birth_date | date:"d.m.Y"}}</td>
                 <td>{{ individual.comment }}</td>
                 <td>
-                    <a href="{% url 'individual_delete' individual.pk %}"><button class="catalog-action">Удалить</button></a>
+                    <a href="{% url 'individual_delete' individual.pk %}"><button class="btn btn-outline-danger btn-sm">Удалить</button></a>
                 </td>
             </tr>
             {% endfor %}

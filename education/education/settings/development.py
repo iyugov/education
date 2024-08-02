@@ -12,3 +12,5 @@ DATABASES = {
         'NAME': BASE_DIR / 'db-development.sqlite3',
     }
 }
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "html/static")]

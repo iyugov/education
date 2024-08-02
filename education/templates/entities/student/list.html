@@ -20,7 +20,7 @@
                     <td><a href="{% url 'student_edit' student.pk %}">{{ student }}</a></td>
                     <td class="cell-label">{{ student.class_group }}</td>
                     <td>
-                        <a href="{% url 'student_delete' student.pk %}"><button class="catalog-action">Удалить</button></a>
+                        <a href="{% url 'student_delete' student.pk %}"><button class="btn btn-outline-danger btn-sm">Удалить</button></a>
                     </td>
                 </tr>
                 {% endfor %}
