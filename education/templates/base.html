@@ -81,6 +81,12 @@
                             <a class="nav-link" href="{% url 'logout' %}">Выйти ({{ username }})</a>
                         </li>
                     </ul>
+                    {% else %}
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Войти</a>
+                        </li>
+                    </ul>
                     {% endif %}
                 </div>
             </div>
@@ -96,7 +102,7 @@
     <script>
         $(document).ready(function() {
 
-            $('#dataTable').DataTable({
+            let table = $('#dataTable').DataTable({
                 language: {
                     "decimal":        "",
                     "emptyTable":     "Нет данных в таблице",
@@ -123,21 +129,35 @@
                 },
                 layout: {
                     topStart: {
-                        buttons: [
-                            {
-                                text: 'Добавить',
-                                action: function (e, dt, node, config) {
-                                    var hrefValue = $('.catalog-container a:first').attr('href');
-                                    if (hrefValue)
-                                        window.location.href = hrefValue;
-                                },
-                                className: 'btn btn-success'
-                            }
-                        ]
+                        buttons: []
                         }
                     }
             });
 
+            link_element = $('#link_action_new');
+            if (link_element.length)
+                table.button().add( 0, {
+                                    text: 'Добавить',
+                                    action: function (e, dt, node, config, cb) {
+                                        link_element = $('#link_action_new');
+                                        hrefValue = link_element.attr('href');
+                                        if (hrefValue)
+                                            window.location.href = hrefValue;
+                                    },
+                                    className: 'btn btn-success'
+                                });
+            link_element = $('#link_action_upload_csv');
+            if (link_element.length)
+                table.button().add( 1, {
+                                    text: 'Из CSV',
+                                    action: function (e, dt, node, config, cb) {
+                                        link_element = $('#link_action_upload_csv');
+                                        hrefValue = link_element.attr('href');
+                                        if (hrefValue)
+                                            window.location.href = hrefValue;
+                                    },
+                                    className: 'btn btn-outline-success'
+                                });
         });
     </script>
 </body>

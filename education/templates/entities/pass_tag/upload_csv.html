@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <h1>Загрузка чипов из файла CSV</h1>
+    <div class="mt-3 mb-5">
+        <p>Требования к файлу:</p>
+        <ul>
+            <li>формат &mdash; CSV;</li>
+            <li>разделители значений &mdash; запятые;</li>
+            <li>символы цитирования &mdash; кавычки (");</li>
+            <li>первый (единственный) столбец &mdash; идентификаторы чипов;</li>
+            <li>первая строка &mdash; заголовок столбца, игнорируется.</li>
+        </ul>
+        <a href="{% static 'files/templates/pass_tag_upload_template.csv' %}">Шаблон файла для загрузки</a>
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <div class="mt-1 mb-1" style="width: 10em;">
+                <div class="form-label">{{ form.csv_file.label_tag }}</div>
+            </div>
+            <div style="width: 24em;">
+                {{ form.csv_file }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="mt-3">
+                <a href="{{ back_url }}"><button class="btn btn-secondary" type="button">Отменить</button></a>
+                <button type="submit" class="btn btn-primary">Загрузить</button>
+            </div>
+        </div>
+        {{ form.csv_file.errors }}
+
+
+    </form>
+    {% for message in messages %}
+        <div class="alert alert-info">{{ message }}</div>
+    {% endfor %}
+{% endblock %}

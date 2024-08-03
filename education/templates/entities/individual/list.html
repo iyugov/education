@@ -5,7 +5,8 @@
 {% block content %}
     <h1>Физические лица</h1>
     <div class="catalog-container" style="max-width: 72em">
-        <a href="{% url 'individual_new' %}"></a>
+        <a href="{% url 'individual_new' %}" id="link_action_new"></a>
+        <a href="{% url 'individual_upload_csv' %}" id="link_action_upload_csv"></a>
         <table class="table table-striped" id="dataTable" style="width: 100%">
             <thead>
                 <tr>

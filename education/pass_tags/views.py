@@ -1,14 +1,19 @@
+from django.db import IntegrityError
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.views.generic.edit import DeleteView
 from django.forms import inlineformset_factory
+from django.contrib import messages
 
+import csv
+import io
+from textwrap import shorten
 
 # Create your views here.
 
-from .models import PassTag, PassTagRequest, PassTagRequestItem
-from .forms import PassTagForm, PassTagRequestForm, PassTagRequestItemForm
+from .models import PassTag, PassTagRequest, PassTagRequestItem, tag_id_validator
+from .forms import PassTagForm, PassTagRequestForm, PassTagRequestItemForm, PassTagCSVUploadForm
 
 from education.metadata import get_dependencies
 
@@ -149,3 +154,60 @@ def pass_tag_request_edit(request, pk):
         form = PassTagRequestForm(instance=pass_tag_request)
         formset = PassTagRequestItemFormSet(instance=pass_tag_request)
     return render(request, 'entities/pass_tag_request/edit.html', {'username': request.user.username, 'form': form, 'formset': formset, 'back_url': back_url})
+
+
+def pass_tag_upload_csv(request):
+    back_link = 'pass_tag_list'
+    back_url = reverse_lazy(back_link)
+    error_message = ''
+    if request.method == 'POST':
+        form = PassTagCSVUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            csv_file = request.FILES['csv_file']
+            success_flag = True
+            upload_report = []
+            valid_tag_ids = []
+            try:
+                data_set = csv_file.read().decode('UTF-8')
+                io_string = io.StringIO(data_set)
+                next(io_string)
+                for line in csv.reader(io_string, delimiter=',', quotechar='"'):
+                    tag_id = line[0].strip()
+                    try:
+                        tag_id_validator(tag_id)
+                    except:
+                        success_flag = False
+                        error_message = f'Неверный идентификатор: {shorten(tag_id, width=9, placeholder='...')}'
+                        break
+                    else:
+                        valid_tag_ids.append(tag_id)
+            except Exception:
+                success_flag = False
+                error_message = 'Файл имеет неверный формат.'
+            if success_flag and not valid_tag_ids:
+                success_flag = False
+                error_message = 'Файл не содержит данных для идентификаторов.'
+            if success_flag:
+                unique_ids = set()
+                for tag_id in valid_tag_ids:
+                    if tag_id in unique_ids:
+                        upload_report.append({'tag_id': tag_id, 'result': 'Повторяется в файле; пропущен.', 'class': 'table-warning'})
+                    else:
+                        if PassTag.objects.filter(tag_id=tag_id).exists():
+                            upload_report.append(
+                                {'tag_id': tag_id, 'result': 'Чип уже существует; пропущен.', 'class': 'table-info'})
+                        else:
+                            PassTag.objects.create(tag_id=tag_id)
+                            upload_report.append({'tag_id': tag_id, 'result': 'Чип создан.', 'class': 'table-success'})
+                            unique_ids.add(tag_id)
+            context = {
+                'username': request.user.username,
+                'form': form,
+                'back_url': back_url,
+                'success': success_flag,
+                'report': upload_report,
+                'error_message': error_message}
+            return render(request, 'entities/pass_tag/upload_csv_result.html', context)
+    else:
+        form = PassTagCSVUploadForm()
+    return render(request, 'entities/pass_tag/upload_csv.html', {'username': request.user.username, 'form': form, 'back_url': back_url})

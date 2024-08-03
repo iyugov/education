@@ -2,7 +2,7 @@
 
 {% block content %}
     <h1>{% if form.instance.pk %}Редактирование{% else %}Создание{% endif %} физического лица</h1>
-<form method="post">
+    <form method="post">
         {% csrf_token %}
         <div class="row">
             <div class="mt-1 mb-1" style="width: 10em;">

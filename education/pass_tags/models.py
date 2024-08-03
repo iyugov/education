@@ -8,7 +8,7 @@ from django.utils.timezone import now
 # Create your models here.
 
 
-def pass_id_validator(pass_id: str | None) -> None:
+def tag_id_validator(pass_id: str | None) -> None:
     """Проверка корректности идентификатора карты."""
     if pass_id is None or not fullmatch('[0-9][0-9][0-9],[0-9][0-9][0-9][0-9][0-9]', pass_id):
         raise ValidationError('Некорректный идентификатор: не соответствует шаблону "NNN,NNNNN".')
@@ -20,7 +20,7 @@ def pass_id_validator(pass_id: str | None) -> None:
 class PassTag(models.Model):
     """Чип."""
 
-    tag_id = models.CharField(_('Идентификатор'), validators=[pass_id_validator], max_length=9, unique=True)
+    tag_id = models.CharField(_('Идентификатор'), validators=[tag_id_validator], max_length=9, unique=True)
     """Идентификатор."""
     
     class Meta:

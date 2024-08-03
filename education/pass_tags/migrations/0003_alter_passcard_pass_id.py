@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='passcard',
             name='pass_id',
-            field=models.CharField(max_length=9, validators=[pass_tags.models.pass_id_validator], verbose_name='Идентификатор'),
+            field=models.CharField(max_length=9, validators=[pass_tags.models.tag_id_validator], verbose_name='Идентификатор'),
         ),
     ]

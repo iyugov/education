@@ -40,6 +40,15 @@ class IndividualForm(forms.ModelForm):
             visible.field.widget.attrs['class'] = 'form-control'
 
 
+class IndividualCSVUploadForm(forms.Form):
+    csv_file = forms.FileField(label='Файл CSV')
+
+    def __init__(self, *args, **kwargs):
+        super(IndividualCSVUploadForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+
+
 class ContactInfoTypeForm(forms.ModelForm):
     class Meta:
         model = ContactInfoType
