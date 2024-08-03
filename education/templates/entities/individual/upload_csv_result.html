@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+        <h1>Результат загрузки чипов</h1>
+            {% if success %}
+            <table class="table table-bordered" style="width: 30em;">
+                <thead>
+                    <tr>
+                        <th scope="col">Идентификатор</th>
+                        <th scope="col">Результат</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for report_item in report %}
+                    <tr class="{{ report_item.class }}">
+                        <td>{{ report_item.tag_id }}</td>
+                        <td>{{ report_item.result }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div style="display: inline-block;">
+                <div class="alert alert-danger">{{ error_message }}</div>
+                <div>Данные из файла не загружены.</div>
+            </div>
+            {% endif %}
+{% endblock %}
