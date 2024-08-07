@@ -53,6 +53,10 @@ class ClassGroup(models.Model):
         verbose_name = _("Класс")
         verbose_name_plural = _("Классы")
 
+    @property
+    def presentation(self):
+        return f'{self}'
+
     def __str__(self):
         if self.label in (x for x in '0123456789'):
             return f'{self.grade}-{self.label}'
@@ -69,6 +73,10 @@ class ClassGroupEnrollment(models.Model):
     class Meta:
         verbose_name = _("Зачисление обучающихся в классы")
         verbose_name_plural = _("Зачисления обучающихся в классы")
+
+    @property
+    def presentation(self):
+        return f'{self}'
 
     def __str__(self):
         return f'№{self.pk} от {self.enrollment_date:%d.%m.%Y}'

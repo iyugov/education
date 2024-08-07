@@ -17,6 +17,7 @@ from datetime import datetime
 from .models import social_insurance_number_validator, Individual, ContactInfoType, ContactInfoItem, Gender
 from .forms import IndividualForm, ContactInfoTypeForm, ContactInfoItemForm, CustomAuthForm, IndividualCSVUploadForm
 from education.metadata import get_dependencies, has_dependencies
+from education.generic_views import render_catalog_list
 
 from classes.models import Student, ClassGroupEnrollmentRegistryItem
 
@@ -63,10 +64,29 @@ class IndividualDelete(DeleteView):
         return super().get(request, *args, **kwargs)
 
 
+
 @login_required(login_url='/login/')
 def individual_list(request):
-    individuals = Individual.objects.all()
-    return render(request, 'entities/individual/list.html', {'username': request.user.username, 'individual_list': individuals})
+    entity_model = Individual
+    url_name = 'individual'
+    columns = [
+        {'name': 'last_name', 'title': 'Фамилия', 'width': 12, 'type': 'text', 'link': url_name + '_edit'},
+        {'name': 'first_name', 'title': 'Имя', 'width': 12, 'type': 'text'},
+        {'name': 'patronymic', 'title': 'Отчество', 'width': 12, 'type': 'text'},
+        {'name': 'gender', 'title': 'Пол', 'width': 6, 'type': 'text'},
+        {'name': 'birth_date', 'title': 'Дата рождения', 'width': 6, 'type': 'date', 'sort': 'birth_date', 'sort_type': 'date'},
+        {'name': 'comment', 'title': 'Комментарий', 'width': 16, 'type': 'text'},
+        {'name': 'actions', 'title': 'Действия', 'width': 12, 'type': 'actions'}
+    ]
+    row_actions = [
+        {'name': 'edit', 'title': 'Изменить', 'url': url_name + '_edit', 'button_class': 'btn-outline-primary'},
+        {'name': 'delete', 'title': 'Удалить', 'url': url_name + '_delete', 'button_class': 'btn-outline-danger'}
+    ]
+    table_actions = [
+        {'name': 'new', 'title': 'Добавить', 'url': url_name + '_new'},
+        {'name': 'upload_csv', 'title': 'Из CSV', 'url': url_name + '_upload_csv'}
+    ]
+    return render_catalog_list(entity_model, columns, table_actions, row_actions, request)
 
 
 @login_required(login_url='/login/')
@@ -381,8 +401,20 @@ class ContactInfoTypeDelete(DeleteView):
 
 @login_required(login_url='/login/')
 def contact_info_type_list(request):
-    contact_info_types = ContactInfoType.objects.all()
-    return render(request, 'entities/contact_info_type/list.html', {'username': request.user.username, 'contact_info_type_list': contact_info_types})
+    entity_model = ContactInfoType
+    url_name = 'contact_info_type'
+    columns = [
+        {'name': 'title', 'title': 'Наименование', 'width': 16, 'type': 'text', 'link': url_name + '_edit'},
+        {'name': 'actions', 'title': 'Действия', 'width': 20, 'type': 'actions'}
+    ]
+    row_actions = [
+        {'name': 'edit', 'title': 'Изменить', 'url': url_name + '_edit', 'button_class': 'btn-outline-primary'},
+        {'name': 'delete', 'title': 'Удалить', 'url': url_name + '_delete', 'button_class': 'btn-outline-danger'}
+    ]
+    table_actions = [
+        {'name': 'new', 'title': 'Добавить', 'url': url_name + '_new'}
+    ]
+    return render_catalog_list(entity_model, columns, table_actions, row_actions, request)
 
 
 @login_required(login_url='/login/')

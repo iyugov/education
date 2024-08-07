@@ -10,6 +10,7 @@ from .models import Student, ClassGroup, ClassGroupEnrollment, ClassGroupEnrollm
 from .forms import StudentForm, ClassGroupForm, ClassGroupEnrollmentForm, ClassGroupEnrollmentItemForm
 
 from education.metadata import get_dependencies
+from education.generic_views import render_catalog_list
 
 
 class StudentDelete(DeleteView):
@@ -41,8 +42,21 @@ class StudentDelete(DeleteView):
 
 @login_required(login_url='/login/')
 def student_list(request):
-    students = Student.objects.all()
-    return render(request, 'entities/student/list.html', {'username': request.user.username, 'student_list': students})
+    entity_model = Student
+    url_name = 'student'
+    columns = [
+        {'name': 'title_without_status', 'title': 'Обучающийся', 'width': 36, 'type': 'number', 'link': url_name + '_edit'},
+        {'name': 'class_group', 'title': 'Класс', 'width': 3, 'type': 'text'},
+        {'name': 'actions', 'title': 'Действия', 'width': 12, 'type': 'actions'}
+    ]
+    row_actions = [
+        {'name': 'edit', 'title': 'Изменить', 'url': url_name + '_edit', 'button_class': 'btn-outline-primary'},
+        {'name': 'delete', 'title': 'Удалить', 'url': url_name + '_delete', 'button_class': 'btn-outline-danger'}
+    ]
+    table_actions = [
+        {'name': 'new', 'title': 'Добавить', 'url': url_name + '_new'}
+    ]
+    return render_catalog_list(entity_model, columns, table_actions, row_actions, request)
 
 
 @login_required(login_url='/login/')
@@ -105,8 +119,20 @@ class ClassGroupDelete(DeleteView):
 
 @login_required(login_url='/login/')
 def class_group_list(request):
-    class_groups = ClassGroup.objects.all()
-    return render(request, 'entities/class_group/list.html', {'username': request.user.username, 'class_group_list': class_groups})
+    entity_model = ClassGroup
+    url_name = 'class_group'
+    columns = [
+        {'name': 'presentation', 'title': 'Класс', 'width': 6, 'type': 'number', 'link': url_name + '_edit'},
+        {'name': 'actions', 'title': 'Действия', 'width': 42, 'type': 'actions'}
+    ]
+    row_actions = [
+        {'name': 'edit', 'title': 'Изменить', 'url': url_name + '_edit', 'button_class': 'btn-outline-primary'},
+        {'name': 'delete', 'title': 'Удалить', 'url': url_name + '_delete', 'button_class': 'btn-outline-danger'}
+    ]
+    table_actions = [
+        {'name': 'new', 'title': 'Добавить', 'url': url_name + '_new'}
+    ]
+    return render_catalog_list(entity_model, columns, table_actions, row_actions, request)
 
 
 @login_required(login_url='/login/')
@@ -170,8 +196,20 @@ class ClassGroupEnrollmentDelete(DeleteView):
 
 @login_required(login_url='/login/')
 def class_group_enrollment_list(request):
-    class_group_enrollments = ClassGroupEnrollment.objects.all()
-    return render(request, 'entities/class_group_enrollment/list.html', {'username': request.user.username, 'class_group_enrollment_list': class_group_enrollments})
+    entity_model = ClassGroupEnrollment
+    url_name = 'class_group_enrollment'
+    columns = [
+        {'name': 'presentation', 'title': 'Зачисление', 'width': 15, 'type': 'text', 'sort': 'enrollment_date', 'sort_type': 'date', 'link': url_name + '_edit'},
+        {'name': 'actions', 'title': 'Действия', 'width': 30, 'type': 'actions'}
+    ]
+    row_actions = [
+        {'name': 'edit', 'title': 'Изменить', 'url': url_name + '_edit', 'button_class': 'btn-outline-primary'},
+        {'name': 'delete', 'title': 'Удалить', 'url': url_name + '_delete', 'button_class': 'btn-outline-danger'}
+    ]
+    table_actions = [
+        {'name': 'new', 'title': 'Добавить', 'url': url_name + '_new'}
+    ]
+    return render_catalog_list(entity_model, columns, table_actions, row_actions, request)
 
 
 @login_required(login_url='/login/')

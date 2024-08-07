@@ -38,66 +38,7 @@
         {% endblock %}
     </main>
 
-    <script>
-        $(document).ready(function() {
+{% include 'catalog_list.html' %}
 
-            let table = $('#dataTable').DataTable({
-                language: {
-                    "decimal":        "",
-                    "emptyTable":     "Нет данных в таблице",
-                    "info":           "Показаны записи _START_-_END_, всего _TOTAL_",
-                    "infoEmpty":      "Показаны записи 0-0, всего 0",
-                    "infoFiltered":   "(отфильтровано из _MAX_ записей)",
-                    "infoPostFix":    "",
-                    "thousands":      " ",
-                    "lengthMenu":     "Показать _MENU_ записей",
-                    "loadingRecords": "Загрузка...",
-                    "processing":     "Обработка...",
-                    "search":         "Поиск:",
-                    "zeroRecords":    "Совпадающих записей не найдено",
-                    "paginate": {
-                        "first":      "<<",
-                        "last":       ">>",
-                        "next":       ">",
-                        "previous":   "<"
-                    },
-                    "aria": {
-                        "sortAscending":  ": активировать для сортировки столбца по возрастанию",
-                        "sortDescending": ": активировать для сортировки столбца по убыванию"
-                    }
-                },
-                layout: {
-                    topStart: {
-                        buttons: []
-                        }
-                    }
-            });
-
-            link_element = $('#link_action_new');
-            if (link_element.length)
-                table.button().add( 0, {
-                                    text: 'Добавить',
-                                    action: function (e, dt, node, config, cb) {
-                                        link_element = $('#link_action_new');
-                                        hrefValue = link_element.attr('href');
-                                        if (hrefValue)
-                                            window.location.href = hrefValue;
-                                    },
-                                    className: 'btn btn-success'
-                                });
-            link_element = $('#link_action_upload_csv');
-            if (link_element.length)
-                table.button().add( 1, {
-                                    text: 'Из CSV',
-                                    action: function (e, dt, node, config, cb) {
-                                        link_element = $('#link_action_upload_csv');
-                                        hrefValue = link_element.attr('href');
-                                        if (hrefValue)
-                                            window.location.href = hrefValue;
-                                    },
-                                    className: 'btn btn-outline-success'
-                                });
-        });
-    </script>
 </body>
 </html>

@@ -15,6 +15,7 @@ from .models import PassTag, PassTagRequest, PassTagRequestItem, tag_id_validato
 from .forms import PassTagForm, PassTagRequestForm, PassTagRequestItemForm, PassTagCSVUploadForm
 
 from education.metadata import get_dependencies
+from education.generic_views import render_catalog_list
 
 class PassTagDelete(DeleteView):
     model = PassTag
@@ -45,8 +46,21 @@ class PassTagDelete(DeleteView):
 
 @login_required(login_url='/login/')
 def pass_tag_list(request):
-    pass_tags = PassTag.objects.all()
-    return render(request, 'entities/pass_tag/list.html', {'username': request.user.username, 'pass_tag_list': pass_tags})
+    entity_model = PassTag
+    url_name = 'pass_tag'
+    columns = [
+        {'name': 'tag_id', 'title': 'Идентификатор', 'width': 16, 'type': 'text', 'link': url_name + '_edit'},
+        {'name': 'actions', 'title': 'Действия', 'width': 20, 'type': 'actions'}
+    ]
+    row_actions = [
+        {'name': 'edit', 'title': 'Изменить', 'url': url_name + '_edit', 'button_class': 'btn-outline-primary'},
+        {'name': 'delete', 'title': 'Удалить', 'url': url_name + '_delete', 'button_class': 'btn-outline-danger'}
+    ]
+    table_actions = [
+        {'name': 'new', 'title': 'Добавить', 'url': url_name + '_new'},
+        {'name': 'upload_csv', 'title': 'Из CSV', 'url': url_name + '_upload_csv'}
+    ]
+    return render_catalog_list(entity_model, columns, table_actions, row_actions, request)
 
 
 @login_required(login_url='/login/')
@@ -95,8 +109,21 @@ class PassTagRequestDelete(DeleteView):
 
 @login_required(login_url='/login/')
 def pass_tag_request_list(request):
-    pass_tag_requests = PassTagRequest.objects.all()
-    return render(request, 'entities/pass_tag_request/list.html', {'username': request.user.username, 'pass_tag_request_list': pass_tag_requests})
+    entity_model = PassTagRequest
+    url_name = 'pass_tag_request'
+    columns = [
+        {'name': 'presentation', 'title': 'Заявка', 'width': 15, 'type': 'text', 'sort': 'request_date', 'sort_type': 'date', 'link': url_name + '_edit'},
+        {'name': 'comment', 'title': 'Комментарий', 'width': 28, 'type': 'text'},
+        {'name': 'actions', 'title': 'Действия', 'width': 12, 'type': 'actions'}
+    ]
+    row_actions = [
+        {'name': 'edit', 'title': 'Изменить', 'url': url_name + '_edit', 'button_class': 'btn-outline-primary'},
+        {'name': 'delete', 'title': 'Удалить', 'url': url_name + '_delete', 'button_class': 'btn-outline-danger'}
+    ]
+    table_actions = [
+        {'name': 'new', 'title': 'Добавить', 'url': url_name + '_new'}
+    ]
+    return render_catalog_list(entity_model, columns, table_actions, row_actions, request)
 
 
 @login_required(login_url='/login/')
