@@ -45,7 +45,7 @@ class Individual(models.Model):
     first_name = models.CharField(_('Имя'), max_length=50)
     """Имя."""
 
-    patronymic = models.CharField(_('Отчество'), max_length=50, blank=True, null=True)
+    patronymic = models.CharField(_('Отчество'), max_length=50, blank=True, default='')
     """Отчество."""
 
     gender = models.ForeignKey(Gender, on_delete=models.PROTECT, verbose_name='Пол')
@@ -82,9 +82,9 @@ class Individual(models.Model):
         if self.patronymic != '':
             result += f' {self.patronymic}'
         if hasattr(self, 'student'):
-            last_class_group_enrollment = self.student.class_group_enrollments.order_by('-enrollment_date').first()
-            if last_class_group_enrollment:
-                result += f' ({last_class_group_enrollment.class_group})'
+            last_class_group_enrollment_registry_item = self.student.class_group_enrollment_registry.order_by('-enrollment_date').first()
+            if last_class_group_enrollment_registry_item:
+                result += f' ({last_class_group_enrollment_registry_item.class_group})'
         return result.strip()
 
     def __str__(self):

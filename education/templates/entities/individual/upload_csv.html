@@ -36,6 +36,14 @@
         {% csrf_token %}
         <div class="row">
             <div class="mt-1 mb-1" style="width: 10em;">
+                <div class="form-label">{{ form.set_students.label_tag }}</div>
+            </div>
+            <div style="width: 12em;" class="mt-1 mb-1 form-check form-switch">
+                {{ form.set_students }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="mt-1 mb-1" style="width: 10em;">
                 <div class="form-label">{{ form.csv_file.label_tag }}</div>
             </div>
             <div style="width: 24em;">

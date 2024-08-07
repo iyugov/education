@@ -51,7 +51,7 @@ class PassTagRequest(models.Model):
         verbose_name_plural = _('Заявки на чипы')
 
     def __str__(self):
-        return f'{self.request_date:%d.%m.%Y}'
+        return f'№{self.pk} от {self.request_date:%d.%m.%Y}'
 
 
 class PassTagRequestItem(models.Model):

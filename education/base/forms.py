@@ -3,6 +3,8 @@ from django.contrib.auth.forms import AuthenticationForm
 
 from .models import Individual, ContactInfoType, ContactInfoItem
 
+from education.metadata import has_dependencies
+
 
 class ContactInfoItemForm(forms.ModelForm):
     class Meta:
@@ -19,8 +21,10 @@ class ContactInfoItemForm(forms.ModelForm):
                 widget.attrs['class'] = 'form-control'
 
 
-
 class IndividualForm(forms.ModelForm):
+
+    is_student = forms.BooleanField(required=False, label='Обучающийся')
+
     class Meta:
         model = Individual
         fields = [
@@ -37,16 +41,29 @@ class IndividualForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(IndividualForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control'
+            if isinstance(visible.field, forms.BooleanField):
+                visible.field.widget.attrs['class'] = 'form-check-input'
+            else:
+                visible.field.widget.attrs['class'] = 'form-control'
+        if self.instance.pk and hasattr(self.instance, 'student'):
+            self.fields['is_student'].initial = True
+            if has_dependencies(self.instance.student):
+                self.fields['is_student'].widget.attrs['disabled'] = 'disabled'
 
 
 class IndividualCSVUploadForm(forms.Form):
+
     csv_file = forms.FileField(label='Файл CSV')
+
+    set_students = forms.BooleanField(required=False, label='Обучающиеся')
 
     def __init__(self, *args, **kwargs):
         super(IndividualCSVUploadForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control'
+            if isinstance(visible.field, forms.BooleanField):
+                visible.field.widget.attrs['class'] = 'form-check-input'
+            else:
+                visible.field.widget.attrs['class'] = 'form-control'
 
 
 class ContactInfoTypeForm(forms.ModelForm):

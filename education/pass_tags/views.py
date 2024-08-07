@@ -4,7 +4,6 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.views.generic.edit import DeleteView
 from django.forms import inlineformset_factory
-from django.contrib import messages
 
 import csv
 import io
@@ -112,7 +111,7 @@ def pass_tag_request_new(request):
             if request.POST.get('action') == 'save':
                 return redirect(back_link)
             else:
-                return redirect('pass_tag_request_edit', pk=pk)
+                return redirect('pass_tag_request_edit', pk=pass_tag_request.pk)
     else:
         form = PassTagRequestForm()
     return render(request, 'entities/pass_tag_request/edit.html', {'username': request.user.username, 'form': form, 'back_url': back_url})
@@ -132,7 +131,6 @@ def pass_tag_request_edit(request, pk):
         formset = PassTagRequestItemFormSet(request.POST, instance=pass_tag_request)
         for formset_item in formset:
             formset_item.fields['holder'].required = False
-        print(formset.errors)
         if form.is_valid() and formset.is_valid():
             pass_tag_request = form.save(commit=False)
             pass_tag_request.save()

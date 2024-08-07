@@ -1,0 +1,76 @@
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Образование</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Основное
+                            </a>
+                            <ul class="dropdown-menu">
+                                {% if user.is_superuser or perms.base.view_individual %}
+                                <li><a class="dropdown-item" href="{% url 'individual_list' %}">Физические лица</a></li>
+                                {% endif %}
+                                {% if user.is_superuser or perms.base.view_contactinfotype %}
+                                <li><a class="dropdown-item" href="{% url 'contact_info_type_list' %}">Типы контактной информации</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Обучение
+                            </a>
+                            <ul class="dropdown-menu">
+                                {% if user.is_superuser or perms.classes.view_student %}
+                                <li><a class="dropdown-item" href="{% url 'student_list' %}">Обучающиеся</a></li>
+                                {% endif %}
+                                {% if user.is_superuser or perms.classes.viewclassgroup %}
+                                <li><a class="dropdown-item" href="{% url 'class_group_list' %}">Классы</a></li>
+                                {% endif %}
+                                {% if user.is_superuser or perms.classes.view_classgroupenrollment %}
+                                <li><a class="dropdown-item" href="{% url 'class_group_enrollment_list' %}">Зачисления</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Чипы
+                            </a>
+                            <ul class="dropdown-menu">
+                                {% if user.is_superuser or perms.pass_tags.view_passtag %}
+                                <li><a class="dropdown-item" href="{% url 'pass_tag_list' %}">Чипы</a></li>
+                                {% endif %}
+                                {% if user.is_superuser or perms.pass_tags.view_passtagrequest %}
+                                <li><a class="dropdown-item" href="{% url 'pass_tag_request_list' %}">Заявки на чипы</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Транспорт
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Карты</a></li>
+                                <li><a class="dropdown-item" href="#">Заявки</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Выйти ({{ username }})</a>
+                        </li>
+                    </ul>
+                    {% else %}
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Войти</a>
+                        </li>
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>

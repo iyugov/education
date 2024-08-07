@@ -16,7 +16,9 @@ from datetime import datetime
 
 from .models import social_insurance_number_validator, Individual, ContactInfoType, ContactInfoItem, Gender
 from .forms import IndividualForm, ContactInfoTypeForm, ContactInfoItemForm, CustomAuthForm, IndividualCSVUploadForm
-from education.metadata import get_dependencies
+from education.metadata import get_dependencies, has_dependencies
+
+from classes.models import Student, ClassGroupEnrollmentRegistryItem
 
 class CSVImportException(Exception):
     def __init__(self, message):
@@ -46,6 +48,18 @@ class IndividualDelete(DeleteView):
         }
         if dependencies != {}:
             return render(request, 'object_cannot_delete.html', context)
+        if hasattr(object_to_delete, 'student'):
+            dependencies = get_dependencies(object_to_delete.student)
+        context = {
+            'username': request.user.username,
+            'object': object_to_delete,
+            'object_verbose_name': self.model._meta.verbose_name,
+            'dependencies': dependencies,
+            'back_url': self.success_url
+        }
+        if dependencies != {}:
+            return render(request, 'object_cannot_delete.html', context)
+
         return super().get(request, *args, **kwargs)
 
 
@@ -64,6 +78,9 @@ def individual_new(request):
         if form.is_valid():
             individual = form.save(commit=False)
             individual.save()
+            is_student = form.cleaned_data.get('is_student')
+            if is_student and not hasattr(individual, 'student'):
+                Student.objects.create(individual=individual)
             return redirect(back_link)
     else:
         form = IndividualForm()
@@ -83,11 +100,27 @@ def individual_edit(request, pk):
         formset = ContactInfoItemFormSet(request.POST, instance=individual)
         for formset_item in formset:
             formset_item.fields['contact_info_type'].required = False
-        print(formset.errors)
         if form.is_valid() and formset.is_valid():
-
             individual = form.save(commit=False)
             individual.save()
+
+            is_student = form.cleaned_data.get('is_student')
+            if is_student and not hasattr(individual, 'student'):
+                Student.objects.create(individual=individual)
+            elif not is_student and hasattr(individual, 'student'):
+                if has_dependencies(individual.student):
+                    context = {
+                        'username': request.user.username,
+                        'form': form,
+                        'formset': formset,
+                        'back_url': back_url
+                    }
+                    if hasattr(individual, 'student'):
+                        context['class_group'] = individual.student.class_group
+                    return render(request, 'entities/individual/edit.html', context)
+                else:
+                    individual.student.delete()
+
             for formset_item in formset:
                 if formset_item.instance.pk and formset_item.cleaned_data['contact_info_type'] is None:
                     formset_item.instance.delete()
@@ -105,7 +138,15 @@ def individual_edit(request, pk):
     else:
         form = IndividualForm(instance=individual)
         formset = ContactInfoItemFormSet(instance=individual)
-    return render(request, 'entities/individual/edit.html', {'username': request.user.username, 'form': form, 'formset': formset, 'back_url': back_url})
+    context = {
+        'username': request.user.username,
+        'form': form,
+        'formset': formset,
+        'back_url': back_url
+    }
+    if hasattr(individual, 'student'):
+        context['class_group'] = individual.student.class_group
+    return render(request, 'entities/individual/edit.html', context)
 
 def individual_upload_csv(request):
     back_link = 'individual_list'
@@ -118,7 +159,6 @@ def individual_upload_csv(request):
             success_flag = True
             upload_report = []
             valid_individual_data = []
-            print()
             try:
                 data_set = csv_file.read().decode('UTF-8')
                 io_string = io.StringIO(data_set)
@@ -134,7 +174,6 @@ def individual_upload_csv(request):
                     try:
                         if raw_data['last_name'] == '':
                             raise CSVImportException(f'{error_prefix}пустая фамилия.')
-                        print(len(raw_data['last_name']))
                         if len(raw_data['last_name']) > Individual._meta.get_field('last_name').max_length:
                             raise CSVImportException(f'{error_prefix}слишком длинная фамилия: {shorten(raw_data_keys['last_name'])}.')
                         if raw_data['first_name'] == '':
@@ -180,6 +219,7 @@ def individual_upload_csv(request):
             if success_flag:
                 unique_pks = set()
                 unique_social_insurance_numbers = set()
+                set_students = form.cleaned_data.get('set_students')
                 for valid_individual in valid_individual_data:
                     social_insurance_number = valid_individual['social_insurance_number']
                     if social_insurance_number:
@@ -216,6 +256,8 @@ def individual_upload_csv(request):
                                 )
                                 if valid_individual['birth_date']:
                                      individual.birth_date = valid_individual['birth_date']
+                                if set_students and not hasattr(individual, 'student'):
+                                    Student.objects.create(individual=individual)
                                 individual_data = {
                                     'name': str(individual),
                                     'birth_date': individual.birth_date,
@@ -261,6 +303,8 @@ def individual_upload_csv(request):
                                 'birth_date': individual.birth_date,
                                 'social_insurance_number': individual.social_insurance_number
                             }
+                            if set_students and not hasattr(individual, 'student'):
+                                Student.objects.create(individual=individual)
                             upload_report.append({'individual': individual_data, 'result': 'Физическое лицо создано.',
                                                   'class': 'table-success'})
                             unique_pks.add(individual.pk)

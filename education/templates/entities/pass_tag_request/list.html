@@ -4,12 +4,12 @@
 
 {% block content %}
     <h1>Заявки на чипы</h1>
-    <div class="catalog-container" style="max-width: 48em">
+    <div class="catalog-container" style="max-width: 43em">
         <a href="{% url 'pass_tag_request_new' %}" id="link_action_new"></a>
         <table class="table table-striped" id="dataTable" style="width: 100%">
             <thead>
                 <tr>
-                    <th width="6em">Дата</th>
+                    <th width="15em">Заявка</th>
                     <th width="20em">Комментарий</th>
                     <th width="8em">Действия</th>
                 </tr>
@@ -17,7 +17,7 @@
             <tbody>
                 {% for pass_tag_request in pass_tag_request_list %}
                 <tr>
-                    <td data-order='{{ pass_tag_request.request_date | date:"Y-m-d"}}'><a href="{% url 'pass_tag_request_edit' pass_tag_request.pk %}">{{ pass_tag_request.request_date | date:"d.m.Y" }}</a></td>
+                    <td data-order='{{ pass_tag_request.request_date | date:"Y-m-d"}}'><a href="{% url 'pass_tag_request_edit' pass_tag_request.pk %}">{{ pass_tag_request }}</a></td>
                     <td>{{ pass_tag_request.comment }}</td>
                     <td>
                         <a href="{% url 'pass_tag_request_delete' pass_tag_request.pk %}"><button class="btn btn-outline-danger btn-sm">Удалить</button></a>

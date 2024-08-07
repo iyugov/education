@@ -68,10 +68,19 @@
             </div>
         </div>
         <div class="row">
+            <div class="mt-1 mb-1" style="width: 10em;">
+                <div class="form-label">{{ form.is_student.label_tag }}</div>
+            </div>
+            <div style="width: 12em;" class="mt-1 mb-1 form-check form-switch">
+                {{ form.is_student }}{% if class_group %} ({{ class_group }}){% endif %}
+                {{ form.is_student.errors }}
+            </div>
+        </div>
+        <div class="row">
             <div class="mt-3 mb-3">
                 <a href="{{ back_url }}"><button class="btn btn-secondary" type="button">Отменить</button></a>
                 <button type="submit" name="action" value="save" class="btn btn-primary">Сохранить</button>
-                <button type="submit" name="action" value="save-and-continue" class="btn btn-primary">Обновить таблицу</button>
+                <button type="submit" name="action" value="save-and-continue" class="btn btn-primary">Сохранить и продолжить</button>
             </div>
         </div>
         {% if form.instance.pk %}
