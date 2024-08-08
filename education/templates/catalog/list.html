@@ -4,44 +4,86 @@
 {% load custom_filters %}
 
 {% block content %}
-    <h1>{{ verbose_name_plural }}</h1>
-    <div class="catalog-container" style="max-width: {{ columns | total_width }}em">
-        {% for table_action in table_actions %}
-        <a href="{% url table_action.url %}" id="link_action_{{ table_action.name }}"></a>
-        {% endfor %}
-        <table class="table table-striped" id="dataTable" style="width: 100%">
-            <thead>
-                <tr>
-                    {% for column in columns %}
-                    <th width="{{ column.width }}em">{{ column.title }}</th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-            {% for object in objects %}
+<h1>{{ verbose_name_plural }}</h1>
+<div class="catalog-container" style="max-width: {{ columns | total_width }}em">
+    <table class="table table-striped" id="dataTable" style="width: 100%">
+        <thead>
             <tr>
                 {% for column in columns %}
-                    <td{% if column.sort_type == 'date' %} data-order='{{ object | getattribute:column.sort | date:"Y-m-d" }}'{% endif %}>
-                        {% if column.link %}<a href="{% url column.link object.pk %}">{% endif %}
-                        {% if column.type == 'date' %}
-                            {{object | getattribute:column.name | date:"d.m.Y"}}
-                        {% elif column.type == 'actions' %}
-                            {% for row_action in row_actions %}
-                                <a href="{% url row_action.url object.pk %}">
-                                    <button class="btn {{ row_action.button_class }} btn-sm">
-                                        {{ row_action.title }}
-                                    </button>
-                                </a>
-                            {% endfor %}
-                        {% else %}
-                            {{object | getattribute:column.name}}
-                        {% endif %}
-                        {% if column.link == 'edit' %}</a>{% endif %}
-                    </td>
+                <th width="{{ column.width }}em">{{ column.title }}</th>
                 {% endfor %}
             </tr>
+        </thead>
+        <tbody>
+        {% for object in objects %}
+        <tr>
+            {% for column in columns %}
+                <td{% if column.sort_type == 'date' %} data-order='{{ object | get_attribute:column.sort | date:"Y-m-d" }}'{% endif %}>
+                    {% if column.link %}<a href="{% url column.link object.pk %}">{% endif %}
+                    {% if column.type == 'date' %}
+                        {{object | get_attribute:column.name | date:"d.m.Y"}}
+                    {% elif column.type == 'actions' %}
+                        {% for row_action in row_actions %}
+                            <a href="{% url row_action.url object.pk %}">
+                                <button class="btn {{ row_action.button_class }} btn-sm">
+                                    {{ row_action.title }}
+                                </button>
+                            </a>
+                        {% endfor %}
+                    {% else %}
+                        {{object | get_attribute:column.name}}
+                    {% endif %}
+                    {% if column.link == 'edit' %}</a>{% endif %}
+                </td>
             {% endfor %}
-            </tbody>
-        </table>
-    </div>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<script>
+    $(document).ready(function() {
+
+        let table = $('#dataTable').DataTable({
+            language: {
+                "decimal":        "",
+                "emptyTable":     "Нет данных в таблице",
+                "info":           "Показаны записи _START_-_END_, всего _TOTAL_",
+                "infoEmpty":      "Показаны записи 0-0, всего 0",
+                "infoFiltered":   "(отфильтровано из _MAX_ записей)",
+                "infoPostFix":    "",
+                "thousands":      " ",
+                "lengthMenu":     "Показать _MENU_ записей",
+                "loadingRecords": "Загрузка...",
+                "processing":     "Обработка...",
+                "search":         "Поиск:",
+                "zeroRecords":    "Совпадающих записей не найдено",
+                "paginate": {
+                    "first":      "<<",
+                    "last":       ">>",
+                    "next":       ">",
+                    "previous":   "<"
+                },
+                "aria": {
+                    "sortAscending":  ": активировать для сортировки столбца по возрастанию",
+                    "sortDescending": ": активировать для сортировки столбца по убыванию"
+                }
+            },
+            layout: {
+                topStart: {
+                    buttons: []
+                    }
+                }
+        });
+        {% for table_action in table_actions %}
+        table.button().add( {{ forloop.counter0 }}, {
+                                text: '{{ table_action.title }}',
+                                action: function (e, dt, node, config, cb) {
+                                    window.location.href = '{% url table_action.url %}';
+                                },
+                                className: 'btn {{ table_action.button_class }}'
+                            });
+        {% endfor %}
+    });
+</script>
 {% endblock %}

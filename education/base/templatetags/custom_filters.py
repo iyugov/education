@@ -4,8 +4,12 @@ register = template.Library()
 
 
 @register.filter
-def getattribute(value, arg):
+def get_attribute(value, arg):
     return getattr(value, arg)
+
+@register.filter
+def get_form_field(form, field_name):
+    return form[field_name]
 
 
 @register.filter

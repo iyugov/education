@@ -15,7 +15,7 @@ from .models import PassTag, PassTagRequest, PassTagRequestItem, tag_id_validato
 from .forms import PassTagForm, PassTagRequestForm, PassTagRequestItemForm, PassTagCSVUploadForm
 
 from education.metadata import get_dependencies
-from education.generic_views import render_catalog_list
+from education.generic_views import render_catalog_list, render_catalog_item
 
 class PassTagDelete(DeleteView):
     model = PassTag
@@ -57,41 +57,22 @@ def pass_tag_list(request):
         {'name': 'delete', 'title': 'Удалить', 'url': url_name + '_delete', 'button_class': 'btn-outline-danger'}
     ]
     table_actions = [
-        {'name': 'new', 'title': 'Добавить', 'url': url_name + '_new'},
-        {'name': 'upload_csv', 'title': 'Из CSV', 'url': url_name + '_upload_csv'}
+        {'name': 'new', 'title': 'Добавить', 'url': url_name + '_new', 'button_class': 'btn-success'},
+        {'name': 'upload_csv', 'title': 'Из CSV', 'url': url_name + '_upload_csv', 'button_class': 'btn-outline-success'}
     ]
     return render_catalog_list(entity_model, columns, table_actions, row_actions, request)
 
 
 @login_required(login_url='/login/')
-def pass_tag_new(request):
-    back_link = 'pass_tag_list'
-    back_url = reverse_lazy(back_link)
-    if request.method == "POST":
-        form = PassTagForm(request.POST)
-        if form.is_valid():
-            pass_tag = form.save(commit=False)
-            pass_tag.save()
-            return redirect(back_link)
-    else:
-        form = PassTagForm()
-    return render(request, 'entities/pass_tag/edit.html', {'username': request.user.username, 'form': form, 'back_url': back_url})
-
-
-@login_required(login_url='/login/')
-def pass_tag_edit(request, pk):
-    back_link = 'pass_tag_list'
-    back_url = reverse_lazy(back_link)
-    pass_tag = get_object_or_404(PassTag, pk=pk)
-    if request.method == 'POST':
-        form = PassTagForm(request.POST, instance=pass_tag)
-        if form.is_valid():
-            pass_tag = form.save(commit=False)
-            pass_tag.save()
-            return redirect(back_link)
-    else:
-        form = PassTagForm(instance=pass_tag)
-    return render(request, 'entities/pass_tag/edit.html', {'username': request.user.username, 'form': form, 'back_url': back_url})
+def pass_tag_item(request, pk=None):
+    entity_model = PassTag
+    edit_form = PassTagForm
+    url_name = 'pass_tag'
+    fields = [
+        {'name': 'tag_id', 'title': 'Идентификатор', 'width': 8},
+    ]
+    labels_width = 12
+    return render_catalog_item(entity_model, edit_form, url_name, fields, labels_width, request, instance_pk=pk)
 
 
 class PassTagRequestDelete(DeleteView):
@@ -121,7 +102,7 @@ def pass_tag_request_list(request):
         {'name': 'delete', 'title': 'Удалить', 'url': url_name + '_delete', 'button_class': 'btn-outline-danger'}
     ]
     table_actions = [
-        {'name': 'new', 'title': 'Добавить', 'url': url_name + '_new'}
+        {'name': 'new', 'title': 'Добавить', 'url': url_name + '_new', 'button_class': 'btn-success'}
     ]
     return render_catalog_list(entity_model, columns, table_actions, row_actions, request)
 
@@ -141,7 +122,7 @@ def pass_tag_request_new(request):
                 return redirect('pass_tag_request_edit', pk=pass_tag_request.pk)
     else:
         form = PassTagRequestForm()
-    return render(request, 'entities/pass_tag_request/edit.html', {'username': request.user.username, 'form': form, 'back_url': back_url})
+    return render(request, 'entities/pass_tag_request/item.html', {'username': request.user.username, 'form': form, 'back_url': back_url})
 
 
 @login_required(login_url='/login/')
@@ -178,7 +159,7 @@ def pass_tag_request_edit(request, pk):
     else:
         form = PassTagRequestForm(instance=pass_tag_request)
         formset = PassTagRequestItemFormSet(instance=pass_tag_request)
-    return render(request, 'entities/pass_tag_request/edit.html', {'username': request.user.username, 'form': form, 'formset': formset, 'back_url': back_url})
+    return render(request, 'entities/pass_tag_request/item.html', {'username': request.user.username, 'form': form, 'formset': formset, 'back_url': back_url})
 
 
 def pass_tag_upload_csv(request):

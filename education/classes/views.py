@@ -10,7 +10,7 @@ from .models import Student, ClassGroup, ClassGroupEnrollment, ClassGroupEnrollm
 from .forms import StudentForm, ClassGroupForm, ClassGroupEnrollmentForm, ClassGroupEnrollmentItemForm
 
 from education.metadata import get_dependencies
-from education.generic_views import render_catalog_list
+from education.generic_views import render_catalog_list, render_catalog_item
 
 
 class StudentDelete(DeleteView):
@@ -54,40 +54,21 @@ def student_list(request):
         {'name': 'delete', 'title': 'Удалить', 'url': url_name + '_delete', 'button_class': 'btn-outline-danger'}
     ]
     table_actions = [
-        {'name': 'new', 'title': 'Добавить', 'url': url_name + '_new'}
+        {'name': 'new', 'title': 'Добавить', 'url': url_name + '_new', 'button_class': 'btn-success'}
     ]
     return render_catalog_list(entity_model, columns, table_actions, row_actions, request)
 
 
 @login_required(login_url='/login/')
-def student_new(request):
-    back_link = 'student_list'
-    back_url = reverse_lazy(back_link)
-    if request.method == "POST":
-        form = StudentForm(request.POST)
-        if form.is_valid():
-            student = form.save(commit=False)
-            student.save()
-            return redirect(back_link)
-    else:
-        form = StudentForm()
-    return render(request, 'entities/student/edit.html', {'username': request.user.username, 'form': form, 'back_url': back_url})
-
-
-@login_required(login_url='/login/')
-def student_edit(request, pk):
-    back_link = 'student_list'
-    back_url = reverse_lazy(back_link)
-    student = get_object_or_404(Student, pk=pk)
-    if request.method == 'POST':
-        form = StudentForm(request.POST, instance=student)
-        if form.is_valid():
-            student = form.save(commit=False)
-            student.save()
-            return redirect(back_link)
-    else:
-        form = StudentForm(instance=student)
-    return render(request, 'entities/student/edit.html', {'username': request.user.username, 'form': form, 'back_url': back_url})
+def student_item(request, pk=None):
+    entity_model = Student
+    edit_form = StudentForm
+    url_name = 'student'
+    fields = [
+        {'name': 'individual', 'title': 'Физическое лицо', 'width': 36},
+    ]
+    labels_width = 12
+    return render_catalog_item(entity_model, edit_form, url_name, fields, labels_width, request, pk)
 
 
 class ClassGroupDelete(DeleteView):
@@ -130,40 +111,22 @@ def class_group_list(request):
         {'name': 'delete', 'title': 'Удалить', 'url': url_name + '_delete', 'button_class': 'btn-outline-danger'}
     ]
     table_actions = [
-        {'name': 'new', 'title': 'Добавить', 'url': url_name + '_new'}
+        {'name': 'new', 'title': 'Добавить', 'url': url_name + '_new', 'button_class': 'btn-success'}
     ]
     return render_catalog_list(entity_model, columns, table_actions, row_actions, request)
 
 
 @login_required(login_url='/login/')
-def class_group_new(request):
-    back_link = 'class_group_list'
-    back_url = reverse_lazy(back_link)
-    if request.method == "POST":
-        form = ClassGroupForm(request.POST)
-        if form.is_valid():
-            class_group = form.save(commit=False)
-            class_group.save()
-            return redirect(back_link)
-    else:
-        form = ClassGroupForm()
-    return render(request, 'entities/class_group/edit.html', {'username': request.user.username, 'form': form, 'back_url': back_url})
-
-
-@login_required(login_url='/login/')
-def class_group_edit(request, pk):
-    back_link = 'class_group_list'
-    back_url = reverse_lazy(back_link)
-    class_group = get_object_or_404(ClassGroup, pk=pk)
-    if request.method == 'POST':
-        form = ClassGroupForm(request.POST, instance=class_group)
-        if form.is_valid():
-            class_group = form.save(commit=False)
-            class_group.save()
-            return redirect(back_link)
-    else:
-        form = ClassGroupForm(instance=class_group)
-    return render(request, 'entities/class_group/edit.html', {'username': request.user.username, 'form': form, 'back_url': back_url})
+def class_group_item(request, pk=None):
+    entity_model = ClassGroup
+    edit_form = ClassGroupForm
+    url_name = 'class_group'
+    fields = [
+        {'name': 'grade', 'title': 'Параллель', 'width': 8},
+        {'name': 'label', 'title': 'Литера', 'width': 10},
+    ]
+    labels_width = 10
+    return render_catalog_item(entity_model, edit_form, url_name, fields, labels_width, request, instance_pk=pk)
 
 
 class ClassGroupEnrollmentDelete(DeleteView):
@@ -207,7 +170,7 @@ def class_group_enrollment_list(request):
         {'name': 'delete', 'title': 'Удалить', 'url': url_name + '_delete', 'button_class': 'btn-outline-danger'}
     ]
     table_actions = [
-        {'name': 'new', 'title': 'Добавить', 'url': url_name + '_new'}
+        {'name': 'new', 'title': 'Добавить', 'url': url_name + '_new', 'button_class': 'btn-success'}
     ]
     return render_catalog_list(entity_model, columns, table_actions, row_actions, request)
 
@@ -228,7 +191,7 @@ def class_group_enrollment_new(request):
                 return redirect('class_group_enrollment_edit', pk=class_group_enrollment.pk)
     else:
         form = ClassGroupEnrollmentForm()
-    return render(request, 'entities/class_group_enrollment/edit.html', {'username': request.user.username, 'form': form, 'back_url': back_url})
+    return render(request, 'entities/class_group_enrollment/item.html', {'username': request.user.username, 'form': form, 'back_url': back_url})
 
 
 @login_required(login_url='/login/')
@@ -274,4 +237,4 @@ def class_group_enrollment_edit(request, pk):
     else:
         form = ClassGroupEnrollmentForm(instance=class_group_enrollment)
         formset = PassTagRequestItemFormSet(instance=class_group_enrollment)
-    return render(request, 'entities/class_group_enrollment/edit.html', {'username': request.user.username, 'form': form, 'formset': formset, 'back_url': back_url})
+    return render(request, 'entities/class_group_enrollment/item.html', {'username': request.user.username, 'form': form, 'formset': formset, 'back_url': back_url})

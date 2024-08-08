@@ -12,8 +12,8 @@ urlpatterns = [
     path('individual/upload_csv_result/', TemplateView.as_view(template_name="entities/individual/upload_csv_result.html"), name='individual_upload_csv_result'),
 
     path('contact_info_type/list/', views.contact_info_type_list, name='contact_info_type_list'),
-    path('contact_info_type/new/', views.contact_info_type_new, name='contact_info_type_new'),
-    path('contact_info_type/<int:pk>/edit/', views.contact_info_type_edit, name='contact_info_type_edit'),
+    path('contact_info_type/new/', views.contact_info_type_item, name='contact_info_type_new'),
+    path('contact_info_type/<int:pk>/edit/', views.contact_info_type_item, name='contact_info_type_edit'),
     path('contact_info_type/<int:pk>/delete/', views.ContactInfoTypeDelete.as_view(), name='contact_info_type_delete'),
 
 ]

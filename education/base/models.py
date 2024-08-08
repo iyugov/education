@@ -126,3 +126,4 @@ class ContactInfoItem(models.Model):
 
     def __str__(self):
         return f'{self.individual.title_without_status}: {self.contact_info_type} - {self.value}'
+

@@ -17,9 +17,10 @@ from datetime import datetime
 from .models import social_insurance_number_validator, Individual, ContactInfoType, ContactInfoItem, Gender
 from .forms import IndividualForm, ContactInfoTypeForm, ContactInfoItemForm, CustomAuthForm, IndividualCSVUploadForm
 from education.metadata import get_dependencies, has_dependencies
-from education.generic_views import render_catalog_list
+from education.generic_views import render_catalog_list, render_catalog_item
 
 from classes.models import Student, ClassGroupEnrollmentRegistryItem
+
 
 class CSVImportException(Exception):
     def __init__(self, message):
@@ -83,8 +84,8 @@ def individual_list(request):
         {'name': 'delete', 'title': 'Удалить', 'url': url_name + '_delete', 'button_class': 'btn-outline-danger'}
     ]
     table_actions = [
-        {'name': 'new', 'title': 'Добавить', 'url': url_name + '_new'},
-        {'name': 'upload_csv', 'title': 'Из CSV', 'url': url_name + '_upload_csv'}
+        {'name': 'new', 'title': 'Добавить', 'url': url_name + '_new', 'button_class': 'btn-success'},
+        {'name': 'upload_csv', 'title': 'Из CSV', 'url': url_name + '_upload_csv', 'button_class': 'btn-outline-success'}
     ]
     return render_catalog_list(entity_model, columns, table_actions, row_actions, request)
 
@@ -104,7 +105,7 @@ def individual_new(request):
             return redirect(back_link)
     else:
         form = IndividualForm()
-    return render(request, 'entities/individual/edit.html', {'username': request.user.username, 'form': form, 'back_url': back_url})
+    return render(request, 'entities/individual/item.html', {'username': request.user.username, 'form': form, 'back_url': back_url})
 
 
 @login_required(login_url='/login/')
@@ -137,7 +138,7 @@ def individual_edit(request, pk):
                     }
                     if hasattr(individual, 'student'):
                         context['class_group'] = individual.student.class_group
-                    return render(request, 'entities/individual/edit.html', context)
+                    return render(request, 'entities/individual/item.html', context)
                 else:
                     individual.student.delete()
 
@@ -166,7 +167,7 @@ def individual_edit(request, pk):
     }
     if hasattr(individual, 'student'):
         context['class_group'] = individual.student.class_group
-    return render(request, 'entities/individual/edit.html', context)
+    return render(request, 'entities/individual/item.html', context)
 
 def individual_upload_csv(request):
     back_link = 'individual_list'
@@ -412,40 +413,21 @@ def contact_info_type_list(request):
         {'name': 'delete', 'title': 'Удалить', 'url': url_name + '_delete', 'button_class': 'btn-outline-danger'}
     ]
     table_actions = [
-        {'name': 'new', 'title': 'Добавить', 'url': url_name + '_new'}
+        {'name': 'new', 'title': 'Добавить', 'url': url_name + '_new', 'button_class': 'btn-success'}
     ]
     return render_catalog_list(entity_model, columns, table_actions, row_actions, request)
 
 
 @login_required(login_url='/login/')
-def contact_info_type_new(request):
-    back_link = 'contact_info_type_list'
-    back_url = reverse_lazy(back_link)
-    if request.method == "POST":
-        form = ContactInfoTypeForm(request.POST)
-        if form.is_valid():
-            contact_info_type = form.save(commit=False)
-            contact_info_type.save()
-            return redirect(back_link)
-    else:
-        form = ContactInfoTypeForm()
-    return render(request, 'entities/contact_info_type/edit.html', {'username': request.user.username, 'form': form, 'back_url': back_url})
-
-
-@login_required(login_url='/login/')
-def contact_info_type_edit(request, pk):
-    back_link = 'contact_info_type_list'
-    back_url = reverse_lazy(back_link)
-    contact_info_type = get_object_or_404(ContactInfoType, pk=pk)
-    if request.method == 'POST':
-        form = ContactInfoTypeForm(request.POST, instance=contact_info_type)
-        if form.is_valid():
-            contact_info_type = form.save(commit=False)
-            contact_info_type.save()
-            return redirect(back_link)
-    else:
-        form = ContactInfoTypeForm(instance=contact_info_type)
-    return render(request, 'entities/contact_info_type/edit.html', {'username': request.user.username, 'form': form, 'back_url': back_url})
+def contact_info_type_item(request, pk=None):
+    entity_model = ContactInfoType
+    edit_form = ContactInfoTypeForm
+    url_name = 'contact_info_type'
+    fields = [
+        {'name': 'title', 'title': 'Наименование', 'width': 12},
+    ]
+    labels_width = 12
+    return render_catalog_item(entity_model, edit_form, url_name, fields, labels_width, request, instance_pk=pk)
 
 
 class CustomLoginView(auth_views.LoginView):
@@ -459,4 +441,3 @@ def user_logout(request):
 
 def home(request):
     return render(request, 'base.html', {'username': request.user.username})
-
