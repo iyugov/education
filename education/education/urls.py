@@ -28,5 +28,4 @@ urlpatterns = [
     path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', views.user_logout, name='logout'),
     path('base/', include('base.urls')),
-    path('pass_tags/', include('pass_tags.urls')),
 ]

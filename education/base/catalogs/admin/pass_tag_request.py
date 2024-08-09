@@ -1,20 +1,11 @@
 from django.contrib import admin
 
-# Register your models here.
-
-from .models import PassTag, PassTagRequest, PassTagRequestItem
+from ..models.pass_tag_request import PassTagRequest, PassTagRequestItem
 
 
 class PassTagRequestItemInline(admin.TabularInline):
     model = PassTagRequestItem
     extra = 1
-
-
-@admin.register(PassTag)
-class PassCardAdmin(admin.ModelAdmin):
-    list_display = ('tag_id', )
-    list_display_links = ('tag_id', )
-    search_fields = ('tag_id', )
 
 
 @admin.register(PassTagRequest)

@@ -1,16 +1,6 @@
 from django import forms
-from .models import PassTag, PassTagRequest, PassTagRequestItem
 
-
-class PassTagForm(forms.ModelForm):
-    class Meta:
-        model = PassTag
-        fields = ['tag_id']
-
-    def __init__(self, *args, **kwargs):
-        super(PassTagForm, self).__init__(*args, **kwargs)
-        for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control'
+from ..models.pass_tag_request import PassTagRequest, PassTagRequestItem
 
 
 class PassTagRequestItemForm(forms.ModelForm):
