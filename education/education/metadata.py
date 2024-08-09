@@ -8,7 +8,7 @@ def get_dependencies(object):
     return check_dependencies(object, existence_only=False)
 
 def check_dependencies(object, existence_only=False):
-    """Получение описаний ссылок на объект по отношениям 1-1 и 1-N, препятсткующих удалению объекта.
+    """Получение описаний ссылок на объект по отношениям 1-1 и 1-N, препятствующих удалению объекта.
     Если значение параметра existence_only истинно, то возвращает булево значение, есть ли ссылки."""
     dependencies = {}
     for model in apps.get_models():

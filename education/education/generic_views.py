@@ -18,7 +18,7 @@ def render_catalog_list(entity_model, columns, table_actions, row_actions, reque
 
 
 def render_catalog_item(entity_model, edit_form, url_name, fields, labels_width, request, instance_pk=None, subtable_list=None, registry_list=None):
-    """Отображение веб-формы элемента "справочника"/"документа"."""
+    """Отображение и обработка веб-формы элемента "справочника"/"документа"."""
     template_name = 'catalog/item.html'
     kwargs = {}
     subtable_factory_list = []
@@ -54,19 +54,18 @@ def render_catalog_item(entity_model, edit_form, url_name, fields, labels_width,
             instance.save()
 
             # Запись "табличных частей"
-            for formset, subtable in zip(formset_list, subtable_list):
-                for formset_item in formset:
-                    if formset_item.instance.pk and formset_item.cleaned_data[subtable['base_field']] is None:
-                        formset_item.instance.delete()
-                items = formset.save()
-                for item in items:
-                    print(item)
-                    print(getattr(item, subtable['base_field']))
-                    if getattr(item, subtable['base_field']) is None:
-                        item.delete()
-                    else:
-                        setattr(item, subtable['owner_field'], instance)
-                        item.save()
+            if subtable_list is not None:
+                for formset, subtable in zip(formset_list, subtable_list):
+                    for formset_item in formset:
+                        if formset_item.instance.pk and formset_item.cleaned_data[subtable['base_field']] is None:
+                            formset_item.instance.delete()
+                    items = formset.save()
+                    for item in items:
+                        if getattr(item, subtable['base_field']) is None:
+                            item.delete()
+                        else:
+                            setattr(item, subtable['owner_field'], instance)
+                            item.save()
 
             # Очистка "движений" по "регистрам"
             if registry_list is not None:

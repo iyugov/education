@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='individual',
             name='social_insurance_number',
-            field=models.CharField(blank=True, max_length=14, null=True, unique=True, validators=[base.models.social_insurance_number_validator], verbose_name='СНИЛС'),
+            field=models.CharField(blank=True, max_length=14, null=True, unique=True, validators=[base.catalogs.models.individual.social_insurance_number_validator], verbose_name='СНИЛС'),
         ),
         migrations.AlterField(
             model_name='individual',

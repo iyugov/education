@@ -1,39 +1,6 @@
-from django.contrib import admin
-
-# Register your models here.
-
-from .models import Gender, Individual, ContactInfoType, ContactInfoItem
-
-
-class ContactInfoItemInline(admin.TabularInline):
-    model = ContactInfoItem
-    extra = 1
-
-
-@admin.register(Gender)
-class GenderAdmin(admin.ModelAdmin):
-    list_display = ('title', )
-    list_display_links = ('title', )
-    search_fields = ('title', )
-
-
-@admin.register(Individual)
-class IndividualAdmin(admin.ModelAdmin):
-    list_display = ('last_name', 'first_name', 'patronymic', 'birth_date', 'social_insurance_number', 'comment')
-    list_display_links = ('last_name', 'first_name', 'patronymic', 'birth_date', 'social_insurance_number', 'comment')
-    search_fields = ('last_name', 'first_name', 'patronymic', 'birth_date', 'social_insurance_number', 'comment')
-    inlines = [ContactInfoItemInline]
-
-
-@admin.register(ContactInfoType)
-class ContactInfoTypeAdmin(admin.ModelAdmin):
-    list_display = ('title', )
-    list_display_links = ('title', )
-    search_fields = ('title', )
-
-
-@admin.register(ContactInfoItem)
-class ContactInfoItemAdmin(admin.ModelAdmin):
-    list_display = ('individual', 'contact_info_type', 'value')
-    list_display_links = ('individual', 'contact_info_type', 'value')
-    search_fields = ('individual', 'contact_info_type', 'value')
+from base.catalogs.admin.gender import GenderAdmin
+from base.catalogs.admin.individual import IndividualAdmin, ContactInfoItemAdmin
+from base.catalogs.admin.contact_info_type import ContactInfoTypeAdmin
+from base.catalogs.admin.student import StudentAdmin
+from base.catalogs.admin.class_group import ClassGroup
+from base.catalogs.admin.class_group_enrollment import ClassGroupEnrollmentAdmin, ClassGroupEnrollmentItemAdmin

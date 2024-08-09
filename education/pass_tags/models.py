@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import ValidationError
 from re import fullmatch
-from base.models import Individual
+from base.catalogs.models.individual import Individual
 from django.utils.timezone import now
 
 # Create your models here.
