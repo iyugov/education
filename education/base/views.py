@@ -91,83 +91,36 @@ def individual_list(request):
 
 
 @login_required(login_url='/login/')
-def individual_new(request):
-    back_link = 'individual_list'
-    back_url = reverse_lazy(back_link)
-    if request.method == "POST":
-        form = IndividualForm(request.POST)
-        if form.is_valid():
-            individual = form.save(commit=False)
-            individual.save()
-            is_student = form.cleaned_data.get('is_student')
-            if is_student and not hasattr(individual, 'student'):
-                Student.objects.create(individual=individual)
-            return redirect(back_link)
-    else:
-        form = IndividualForm()
-    return render(request, 'entities/individual/item.html', {'username': request.user.username, 'form': form, 'back_url': back_url})
-
-
-@login_required(login_url='/login/')
-def individual_edit(request, pk):
-    back_link = 'individual_list'
-    back_url = reverse_lazy(back_link)
-    individual = get_object_or_404(Individual, pk=pk)
-    ContactInfoItemFormSet = inlineformset_factory(
-        Individual, ContactInfoItem, form=ContactInfoItemForm, extra=1, can_delete=True
-    )
-    if request.method == 'POST':
-        form = IndividualForm(request.POST, instance=individual)
-        formset = ContactInfoItemFormSet(request.POST, instance=individual)
-        for formset_item in formset:
-            formset_item.fields['contact_info_type'].required = False
-        if form.is_valid() and formset.is_valid():
-            individual = form.save(commit=False)
-            individual.save()
-
-            is_student = form.cleaned_data.get('is_student')
-            if is_student and not hasattr(individual, 'student'):
-                Student.objects.create(individual=individual)
-            elif not is_student and hasattr(individual, 'student'):
-                if has_dependencies(individual.student):
-                    context = {
-                        'username': request.user.username,
-                        'form': form,
-                        'formset': formset,
-                        'back_url': back_url
-                    }
-                    if hasattr(individual, 'student'):
-                        context['class_group'] = individual.student.class_group
-                    return render(request, 'entities/individual/item.html', context)
-                else:
-                    individual.student.delete()
-
-            for formset_item in formset:
-                if formset_item.instance.pk and formset_item.cleaned_data['contact_info_type'] is None:
-                    formset_item.instance.delete()
-            items = formset.save()
-            for item in items:
-                if item.contact_info_type is None:
-                    item.delete()
-                else:
-                    item.individual = individual
-                    item.save()
-            if request.POST.get('action') == 'save':
-                return redirect(back_link)
-            else:
-                return redirect('individual_edit', pk=pk)
-    else:
-        form = IndividualForm(instance=individual)
-        formset = ContactInfoItemFormSet(instance=individual)
-    context = {
-        'username': request.user.username,
-        'form': form,
-        'formset': formset,
-        'back_url': back_url
-    }
-    if hasattr(individual, 'student'):
-        context['class_group'] = individual.student.class_group
-    return render(request, 'entities/individual/item.html', context)
+def individual_item(request, pk=None):
+    entity_model = Individual
+    edit_form = IndividualForm
+    url_name = 'individual'
+    fields = [
+        {'name': 'last_name', 'title': 'Фамилия', 'width': 12},
+        {'name': 'first_name', 'title': 'Имя', 'width': 12},
+        {'name': 'patronymic', 'title': 'Отчество', 'width': 12},
+        {'name': 'birth_date', 'title': 'Дата рождения', 'width': 10},
+        {'name': 'gender', 'title': 'Пол', 'width': 8},
+        {'name': 'social_insurance_number', 'title': 'СНИЛС', 'width': 10},
+        {'name': 'comment', 'title': 'Комментарий', 'width': 20},
+    ]
+    subtable_list = [
+        {
+            'title': 'Контактная информация',
+            'class': ContactInfoItem,
+            'form_class': ContactInfoItemForm,
+            'extra_lines': 3,
+            'base_field': 'contact_info_type',
+            'owner_field': 'individual',
+            'fields': [
+                {'name': 'contact_info_type', 'title': 'Тип', 'width': 12},
+                {'name': 'value', 'title': 'Значение', 'width': 14},
+                {'name': 'comment', 'title': 'Комментарий', 'width': 20},
+            ]
+        }
+    ]
+    labels_width = 12
+    return render_catalog_item(entity_model, edit_form, url_name, fields, labels_width, request, instance_pk=pk, subtable_list=subtable_list)
 
 def individual_upload_csv(request):
     back_link = 'individual_list'

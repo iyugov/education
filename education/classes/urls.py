@@ -13,7 +13,7 @@ urlpatterns = [
     path('class_group/<int:pk>/delete/', views.ClassGroupDelete.as_view(), name='class_group_delete'),
 
     path('class_group_enrollment/list/', views.class_group_enrollment_list, name='class_group_enrollment_list'),
-    path('class_group_enrollment/new/', views.class_group_enrollment_new, name='class_group_enrollment_new'),
-    path('class_group_enrollment/<int:pk>/edit/', views.class_group_enrollment_edit, name='class_group_enrollment_edit'),
+    path('class_group_enrollment/new/', views.class_group_enrollment_item, name='class_group_enrollment_new'),
+    path('class_group_enrollment/<int:pk>/edit/', views.class_group_enrollment_item, name='class_group_enrollment_edit'),
     path('class_group_enrollment/<int:pk>/delete/', views.ClassGroupEnrollmentDelete.as_view(), name='class_group_enrollment_delete'),
 ]

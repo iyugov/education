@@ -108,59 +108,35 @@ def pass_tag_request_list(request):
 
 
 @login_required(login_url='/login/')
-def pass_tag_request_new(request):
-    back_link = 'pass_tag_request_list'
-    back_url = reverse_lazy(back_link)
-    if request.method == "POST":
-        form = PassTagRequestForm(request.POST)
-        if form.is_valid():
-            pass_tag_request = form.save(commit=False)
-            pass_tag_request.save()
-            if request.POST.get('action') == 'save':
-                return redirect(back_link)
-            else:
-                return redirect('pass_tag_request_edit', pk=pass_tag_request.pk)
-    else:
-        form = PassTagRequestForm()
-    return render(request, 'entities/pass_tag_request/item.html', {'username': request.user.username, 'form': form, 'back_url': back_url})
-
-
-@login_required(login_url='/login/')
-def pass_tag_request_edit(request, pk):
-    back_link = 'pass_tag_request_list'
-    back_url = reverse_lazy(back_link)
-    pass_tag_request = get_object_or_404(PassTagRequest, pk=pk)
-    PassTagRequestItemFormSet = inlineformset_factory(
-        PassTagRequest, PassTagRequestItem, form=PassTagRequestItemForm, extra=1, can_delete=True
-    )
-
-    if request.method == 'POST':
-        form = PassTagRequestForm(request.POST, instance=pass_tag_request)
-        formset = PassTagRequestItemFormSet(request.POST, instance=pass_tag_request)
-        for formset_item in formset:
-            formset_item.fields['holder'].required = False
-        if form.is_valid() and formset.is_valid():
-            pass_tag_request = form.save(commit=False)
-            pass_tag_request.save()
-            for formset_item in formset:
-                if formset_item.instance.pk and formset_item.cleaned_data['holder'] is None:
-                    formset_item.instance.delete()
-            items = formset.save()
-            for item in items:
-                if item.holder is None:
-                    item.delete()
-                else:
-                    item.pass_tag_request = pass_tag_request
-                    item.save()
-            if request.POST.get('action') == 'save':
-                return redirect(back_link)
-            else:
-                return redirect('pass_tag_request_edit', pk=pk)
-    else:
-        form = PassTagRequestForm(instance=pass_tag_request)
-        formset = PassTagRequestItemFormSet(instance=pass_tag_request)
-    return render(request, 'entities/pass_tag_request/item.html', {'username': request.user.username, 'form': form, 'formset': formset, 'back_url': back_url})
-
+def pass_tag_request_item(request, pk=None):
+    entity_model = PassTagRequest
+    edit_form = PassTagRequestForm
+    url_name = 'pass_tag_request'
+    fields = [
+        {'name': 'requester', 'title': 'Заявитель', 'width': 24},
+        {'name': 'executor', 'title': 'Исполнитель', 'width': 24},
+        {'name': 'request_date', 'title': 'Дата заявки', 'width': 10},
+        {'name': 'comment', 'title': 'Комментарий', 'width': 20},
+    ]
+    subtable_list = [
+        {
+            'title': 'Контактная информация',
+            'class': PassTagRequestItem,
+            'form_class': PassTagRequestItemForm,
+            'extra_lines': 3,
+            'base_field': 'holder',
+            'owner_field': 'pass_tag_request',
+            'fields': [
+                {'name': 'holder', 'title': 'Тип', 'width': 24},
+                {'name': 'reason', 'title': 'Причина', 'width': 14},
+                {'name': 'processing_date', 'title': 'Дата обработки', 'width': 10},
+                {'name': 'pass_tag', 'title': 'Чип', 'width': 8},
+                {'name': 'status', 'title': 'Статус', 'width': 12},
+            ]
+        }
+    ]
+    labels_width = 12
+    return render_catalog_item(entity_model, edit_form, url_name, fields, labels_width, request, instance_pk=pk, subtable_list=subtable_list)
 
 def pass_tag_upload_csv(request):
     back_link = 'pass_tag_list'

@@ -103,7 +103,7 @@ class PassTagRequestItem(models.Model):
     """Чип."""
 
     status = models.CharField(_('Статус'), max_length=50, choices=STATUS_CHOICES, default=STATUS_REQUEST)
-    """Причина."""
+    """Статус."""
 
     class Meta:
         verbose_name = _('Элемент заявки на чипы')
