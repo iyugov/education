@@ -71,9 +71,15 @@
             },
             layout: {
                 topStart: {
-                    buttons: []
+                    buttons: [],
+                    pageLength: [],
                     }
-                }
+                },
+            lengthMenu: [
+                [10, 20, 50, 100, 500, -1],
+                [10, 20, 50, 100, 500, 'Все']
+            ]
+
         });
         {% for table_action in table_actions %}
         table.button().add( {{ forloop.counter0 }}, {

@@ -8,13 +8,24 @@
     {% csrf_token %}
     <div class="row">
         <div class="mb-3">
-            <a href="{{ back_url }}"><button class="btn btn-secondary" type="button">Отменить</button></a>
-            <button type="submit" name="action" value="save" class="btn btn-primary">Сохранить</button>
-            <button type="submit" name="action" value="save-and-continue" class="btn btn-primary">Сохранить и продолжить</button>
+            <a href="{{ back_url }}"><button class="btn btn-secondary" type="button">
+                 {% if can_change %}Отменить{% else %}Возврат{% endif %}
+            </button></a>
+            {% if can_change %}
+                <button type="submit" name="action" value="save" class="btn btn-primary">Сохранить</button>
+                <button type="submit" name="action" value="save-and-continue" class="btn btn-primary">Сохранить и продолжить</button>
+            {% endif %}
+            {% for item_extra_action in item_extra_actions %}
+                <a href="{% url item_extra_action.url form.instance.pk %}">
+                    <button type="button" name="action" value="{{ item_extra_action.name }}" class="btn {{ item_extra_action.button_class }}">
+                        {{ item_extra_action.title }}
+                    </button>
+                </a>
+            {% endfor %}
         </div>
     </div>
     <div class="mt-3 mb-3">
-        <h1>{{ verbose_name }}: {% if form.instance.pk %}изменение{% else %}создание{% endif %}</h1>
+        <h1>{{ verbose_name }}: {% if form.instance.pk %}{% if can_change %}изменение{% else %}просмотр{% endif %}{% else %}создание{% endif %}</h1>
     </div>
     <div>
         {% for field in fields %}
