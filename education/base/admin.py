@@ -9,3 +9,5 @@ from base.entities.documents.class_group_enrollment.admin import ClassGroupEnrol
 from base.entities.documents.pass_tag_request.admin import PassTagRequestAdmin, PassTagRequestItemAdmin
 
 from base.entities.enumerations.gender.admin import GenderAdmin
+
+from base.entities.registries.class_group_enrollment_registry.admin import ClassGroupEnrollmentRegistryItemAdmin

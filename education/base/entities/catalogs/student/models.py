@@ -24,11 +24,11 @@ class Student(Catalog):
 
     @property
     def class_group(self):
-        last_class_group_enrollment = self.class_group_enrollment_registry.order_by('-enrollment_date').first()
-        if last_class_group_enrollment:
-            return last_class_group_enrollment.class_group
-        else:
-            return ''
+        if hasattr(self, 'class_group_enrollment_registry'):
+            last_class_group_enrollment = self.class_group_enrollment_registry.order_by('-enrollment_date').first()
+            if last_class_group_enrollment:
+                return last_class_group_enrollment.class_group
+        return ''
 
     @property
     def title_with_status(self):

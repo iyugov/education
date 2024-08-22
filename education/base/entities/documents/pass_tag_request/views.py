@@ -93,7 +93,6 @@ def pass_tag_request_item(request, pk=None):
 
 @login_required(login_url='/login/')
 def pass_tag_request_export_csv(request, pk=None):
-    print(pk)
     instance=PassTagRequest.objects.filter(pk=pk).first()
     file_name = f'{instance.pk}_{instance.date:%d.%m.%Y}.csv'
     response = HttpResponse(content_type='text/csv')

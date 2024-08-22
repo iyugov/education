@@ -4,6 +4,7 @@ import inspect
 import base.entities.catalogs as catalogs
 import base.entities.documents as documents
 import base.entities.enumerations as enumerations
+import base.entities.registries as registries
 
 def has_dependencies(object):
     return check_dependencies(object, existence_only=True)
@@ -36,7 +37,7 @@ def check_dependencies(object, existence_only=False):
 
 
 def get_entities_data():
-    entity_packages = (catalogs, documents, enumerations)
+    entity_packages = (catalogs, documents, registries, enumerations)
     entities_data = []
     for entity_package in entity_packages:
         for package_name, package in inspect.getmembers(entity_package, predicate=inspect.ismodule):

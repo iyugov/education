@@ -88,10 +88,6 @@ def individual_list(request):
 
 @login_required(login_url='/login/')
 def individual_item(request, pk=None):
-    if request.user.has_perm('base.view_pass_tag'):
-        print('yes')
-    else:
-        print('no')
     entity_model = Individual
     edit_form = IndividualForm
     url_name = 'individual'

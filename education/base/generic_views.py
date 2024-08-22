@@ -13,25 +13,13 @@ from .generic_models import Catalog, Document
 def generic_view(request):
     return render(request, 'base.html', {})
 
-def list_permissions():
-    app_name = 'base'
-
-    # Получите ContentType для вашего приложения
-    content_type = ContentType.objects.filter(app_label=app_name)
-
-    # Получите права, связанные с этим ContentType
-    app_permissions = Permission.objects.filter(content_type__in=content_type)
-
-    # Печатаем названия прав для указанного приложения
-    for perm in app_permissions:
-        print(f"{perm.codename}: {perm.name}")
-
 
 def get_model_permission_name(entity_model, action):
     model_name = entity_model._meta.model_name.lower()
     app_label = entity_model._meta.app_label.lower()
     perm_code = f"{action}_{model_name}"
     return f"{app_label}.{perm_code}"
+
 
 def render_catalog_list(entity_model, columns, table_actions, row_actions, request):
     """Отображение веб-формы списка "справочника"."""
