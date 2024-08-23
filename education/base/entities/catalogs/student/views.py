@@ -62,6 +62,7 @@ def student_item(request, pk=None):
     edit_form = StudentForm
     url_name = 'student'
     fields = [
+        {'name': 'code', 'title': 'Код', 'width': 6},
         {'name': 'individual', 'title': 'Физическое лицо', 'width': 36},
     ]
     labels_width = 12

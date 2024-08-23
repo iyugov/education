@@ -45,7 +45,8 @@ def class_group_enrollment_list(request):
     url_name = 'class_group_enrollment'
     columns = [
         {'name': 'presentation', 'title': 'Зачисление', 'width': 15, 'type': 'text', 'sort': 'enrollment_date', 'sort_type': 'date', 'link': url_name + '_edit'},
-        {'name': 'actions', 'title': 'Действия', 'width': 30, 'type': 'actions'}
+        {'name': 'comment', 'title': 'Комментарий', 'width': 20, 'type': 'text'},
+        {'name': 'actions', 'title': 'Действия', 'width': 12, 'type': 'actions'}
     ]
     row_actions = [
         {'name': 'edit', 'title': 'Изменить', 'url': url_name + '_edit', 'button_class': 'btn-outline-primary'},
@@ -66,6 +67,7 @@ def class_group_enrollment_item(request, pk=None):
         {'name': 'number', 'title': 'Номер', 'width': 10},
         {'name': 'date', 'title': 'Дата', 'width': 10},
         {'name': 'enrollment_date', 'title': 'Дата зачисления', 'width': 10},
+        {'name': 'comment', 'title': 'Комментарий', 'width': 20},
     ]
     registry_list = [
         {
@@ -85,7 +87,7 @@ def class_group_enrollment_item(request, pk=None):
             'title': 'Зачисления',
             'class': ClassGroupEnrollmentItem,
             'form_class': ClassGroupEnrollmentItemForm,
-            'extra_lines': 5,
+            'extra_lines': 50,
             'base_field': 'student',
             'owner_field': 'class_group_enrollment',
             'fields': [

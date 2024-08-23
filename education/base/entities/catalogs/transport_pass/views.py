@@ -2,17 +2,21 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.views.generic.edit import DeleteView
 
+import io
+import csv
+from textwrap import shorten
+
 from ....views import render_page as render
 from ....metadata import get_dependencies
 from ....generic_views import render_catalog_list, render_catalog_item
 
-from ....entities.catalogs.position.models import Position
-from ....entities.catalogs.position.forms import PositionForm
+from ....entities.catalogs.transport_pass.models import TransportPass, pass_id_validator
+from ....entities.catalogs.transport_pass.forms import TransportPassForm
 
 
-class PositionDelete(DeleteView):
-    model = Position
-    success_url = reverse_lazy('position_list')
+class TransportPassDelete(DeleteView):
+    model = TransportPass
+    success_url = reverse_lazy('transport_pass_list')
     template_name = 'object_confirm_delete.html'
 
     def get_context_data(self, **kwargs):
@@ -38,12 +42,12 @@ class PositionDelete(DeleteView):
 
 
 @login_required(login_url='/login/')
-def position_list(request):
-    entity_model = Position
-    url_name = 'position'
+def transport_pass_list(request):
+    entity_model = TransportPass
+    url_name = 'transport_pass'
     columns = [
-        {'name': 'title', 'title': 'Наименование', 'width': 20, 'type': 'text', 'link': url_name + '_edit'},
-        {'name': 'actions', 'title': 'Действия', 'width': 12, 'type': 'actions'}
+        {'name': 'pass_id', 'title': 'Номер', 'width': 20, 'type': 'text', 'link': url_name + '_edit'},
+        {'name': 'actions', 'title': 'Действия', 'width': 24, 'type': 'actions'}
     ]
     row_actions = [
         {'name': 'edit', 'title': 'Изменить', 'url': url_name + '_edit', 'button_class': 'btn-outline-primary'},
@@ -56,14 +60,13 @@ def position_list(request):
 
 
 @login_required(login_url='/login/')
-def position_item(request, pk=None):
-    entity_model = Position
-    edit_form = PositionForm
-    url_name = 'position'
+def transport_pass_item(request, pk=None):
+    entity_model = TransportPass
+    edit_form = TransportPassForm
+    url_name = 'transport_pass'
     fields = [
         {'name': 'code', 'title': 'Код', 'width': 6},
-        {'name': 'title', 'title': 'Наименование', 'width': 36},
+        {'name': 'pass_id', 'title': 'Номер', 'width': 13},
     ]
-    subtable_list = []
-    labels_width = 12
-    return render_catalog_item(entity_model, edit_form, url_name, fields, labels_width, request, instance_pk=pk, subtable_list=subtable_list)
+    labels_width = 6
+    return render_catalog_item(entity_model, edit_form, url_name, fields, labels_width, request, instance_pk=pk)

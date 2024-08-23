@@ -27,7 +27,7 @@ MAIN_MENU = [
     {
         'title': 'Транспорт',
         'items': [
-            {'title': 'Карты', 'url': ''},
+            {'title': 'Карты', 'url': 'transport_pass_list'},
             {'title': 'Заявки', 'url': ''},
         ]
     },

@@ -66,6 +66,7 @@ def pass_tag_item(request, pk=None):
     edit_form = PassTagForm
     url_name = 'pass_tag'
     fields = [
+        {'name': 'code', 'title': 'Код', 'width': 6},
         {'name': 'tag_id', 'title': 'Идентификатор', 'width': 8},
     ]
     labels_width = 12

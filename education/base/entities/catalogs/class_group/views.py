@@ -42,7 +42,8 @@ def class_group_list(request):
     entity_model = ClassGroup
     url_name = 'class_group'
     columns = [
-        {'name': 'presentation', 'title': 'Класс', 'width': 6, 'type': 'number', 'link': url_name + '_edit'},
+        {'name': 'presentation', 'title': 'Класс', 'width': 6, 'type': 'number', 'sort': 'grade',
+         'sort_type': 'number', 'link': url_name + '_edit'},
         {'name': 'actions', 'title': 'Действия', 'width': 42, 'type': 'actions'}
     ]
     row_actions = [
@@ -61,6 +62,7 @@ def class_group_item(request, pk=None):
     edit_form = ClassGroupForm
     url_name = 'class_group'
     fields = [
+        {'name': 'code', 'title': 'Код', 'width': 6},
         {'name': 'grade', 'title': 'Параллель', 'width': 8},
         {'name': 'label', 'title': 'Литера', 'width': 10},
     ]

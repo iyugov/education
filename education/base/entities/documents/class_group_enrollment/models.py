@@ -16,6 +16,9 @@ class ClassGroupEnrollment(Document):
     enrollment_date = models.DateField(_('Дата зачисления'), default=now)
     """Дата зачисления."""
 
+    comment = models.CharField(_('Комментарий'), max_length=255, blank=True, default='')
+    """Комментарий."""
+
     class Meta:
         verbose_name = _("Зачисление обучающихся в классы")
         verbose_name_plural = _("Зачисления обучающихся в классы")

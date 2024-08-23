@@ -7,7 +7,7 @@ from ....generic_models import Catalog
 
 
 def tag_id_validator(pass_id: str | None) -> None:
-    """Проверка корректности идентификатора карты."""
+    """Проверка корректности идентификатора чипа."""
     if pass_id is None or not fullmatch('[0-9][0-9][0-9],[0-9][0-9][0-9][0-9][0-9]', pass_id):
         raise ValidationError('Некорректный идентификатор: не соответствует шаблону "NNN,NNNNN".')
     pass_id_parts = tuple(map(int, pass_id.split(',')))

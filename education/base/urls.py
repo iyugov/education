@@ -7,6 +7,7 @@ from .entities.catalogs.individual import views as individual_views
 from .entities.catalogs.contact_info_type import views as contact_info_type_views
 from .entities.catalogs.employee import views as employee_views
 from .entities.catalogs.position import views as position_views
+from .entities.catalogs.transport_pass import views as transport_pass_views
 
 from .entities.documents.pass_tag_request import views as pass_tag_request_views
 from .entities.documents.class_group_enrollment import views as class_group_enrollment_views
@@ -73,6 +74,11 @@ urlpatterns = [
     path('pass_tag_request/<int:pk>/edit/', pass_tag_request_views.pass_tag_request_item, name='pass_tag_request_edit'),
     path('pass_tag_request/<int:pk>/delete/', pass_tag_request_views.PassTagRequestDelete.as_view(), name='pass_tag_request_delete'),
     path('pass_tag_request/<int:pk>/export_csv/', pass_tag_request_views.pass_tag_request_export_csv, name='pass_tag_request_export_csv'),
+
+    path('transport_pass/list/', transport_pass_views.transport_pass_list, name='transport_pass_list'),
+    path('transport_pass/new/', transport_pass_views.transport_pass_item, name='transport_pass_new'),
+    path('transport_pass/<int:pk>/edit/', transport_pass_views.transport_pass_item, name='transport_pass_edit'),
+    path('transport_pass/<int:pk>/delete/', transport_pass_views.TransportPassDelete.as_view(), name='transport_pass_delete'),
 
 ]
 

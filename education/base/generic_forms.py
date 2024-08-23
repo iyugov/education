@@ -2,12 +2,12 @@ from django import forms
 from django_select2 import forms as s2forms
 
 
-class CatalogForm(forms.ModelForm):
+class BasicEntityForm(forms.ModelForm):
 
     dummy = forms.ChoiceField(widget=s2forms.ModelSelect2Widget, required=False)
 
     def __init__(self, *args, **kwargs):
-        super(CatalogForm, self).__init__(*args, **kwargs)
+        super(BasicEntityForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
             if isinstance(visible.field.widget, forms.widgets.CheckboxInput):
@@ -15,20 +15,30 @@ class CatalogForm(forms.ModelForm):
             elif isinstance(visible.field.widget, s2forms.ModelSelect2Widget):
                 visible.field.widget.attrs['data-allow-clear'] = 'true'
                 visible.field.widget.attrs['data-placeholder'] = '---'
-        if hasattr(self, 'code'):
-            self.fields['code'].disabled = True
-        if hasattr(self, 'number'):
-            self.fields['number'].disabled = True
 
 
+class CatalogForm(BasicEntityForm):
+
+    def __init__(self, *args, **kwargs):
+        super(CatalogForm, self).__init__(*args, **kwargs)
+        if 'code' in self.fields:
+            self.fields['code'].widget.attrs['readonly'] = True
 
 
-class CatalogSubtableItemForm(forms.ModelForm):
+class DocumentForm(BasicEntityForm):
+
+    def __init__(self, *args, **kwargs):
+        super(DocumentForm, self).__init__(*args, **kwargs)
+        if 'number' in self.fields:
+            self.fields['number'].widget.attrs['readonly'] = True
+
+
+class BasicSubtableItemForm(forms.ModelForm):
 
     dummy = forms.ChoiceField(widget=s2forms.ModelSelect2Widget, required=False)
 
     def __init__(self, *args, **kwargs):
-        super(CatalogSubtableItemForm, self).__init__(*args, **kwargs)
+        super(BasicSubtableItemForm, self).__init__(*args, **kwargs)
         for field in self.fields.items():
             widget = field[1].widget
             widget.attrs['class'] = 'form-control'
@@ -39,5 +49,9 @@ class CatalogSubtableItemForm(forms.ModelForm):
                 widget.attrs['data-placeholder'] = '---'
 
 
-DocumentForm = CatalogForm
-DocumentSubtableItemForm = CatalogSubtableItemForm
+class CatalogSubtableItemForm(BasicSubtableItemForm):
+    pass
+
+
+class DocumentSubtableItemForm(BasicSubtableItemForm):
+    pass

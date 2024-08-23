@@ -21,8 +21,11 @@ class ClassGroupEnrollmentItemForm(DocumentSubtableItemForm):
                 queryset=Student.objects.all().order_by('individual')
             ),
             'class_group': s2forms.ModelSelect2Widget(
-                search_fields=["grade__icontains"],
-                queryset=ClassGroup.objects.all().order_by('grade')
+                search_fields=["grade__icontains", "label__icontains"],
+                queryset=ClassGroup.objects.all().order_by('grade'),
+                attrs={
+                    "data-minimum-input-length": 1
+                }
             ),
         }
 
@@ -31,14 +34,12 @@ class ClassGroupEnrollmentForm(DocumentForm):
 
     class Meta:
         model = ClassGroupEnrollment
-        fields = ['number', 'date', 'enrollment_date']
-
-
+        fields = ['number', 'date', 'enrollment_date', 'comment']
 
     class_group_enrollment_list = forms.inlineformset_factory(
             ClassGroupEnrollment,
             ClassGroupEnrollmentItem,
             form=ClassGroupEnrollmentItemForm,
-            extra=5,
+            extra=50,
             can_delete=True
         )

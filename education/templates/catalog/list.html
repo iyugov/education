@@ -18,7 +18,7 @@
         {% for object in objects %}
         <tr>
             {% for column in columns %}
-                <td{% if column.sort_type == 'date' %} data-order='{{ object | get_attribute:column.sort | date:"Y-m-d" }}'{% endif %}>
+                <td{% if column.sort_type == 'date' %} data-order='{{ object | get_attribute:column.sort | date:"Y-m-d" }}'{% elif column.sort_type == 'number' %} data-order='{{ object | get_attribute:column.sort }}'{% endif %}>
                     {% if column.link %}<a href="{% url column.link object.pk %}">{% endif %}
                     {% if column.type == 'date' %}
                         {{object | get_attribute:column.name | date:"d.m.Y"}}

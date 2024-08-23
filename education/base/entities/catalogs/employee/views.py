@@ -62,6 +62,7 @@ def employee_item(request, pk=None):
     edit_form = EmployeeForm
     url_name = 'employee'
     fields = [
+        {'name': 'code', 'title': 'Код', 'width': 6},
         {'name': 'individual', 'title': 'Физическое лицо', 'width': 36},
     ]
     subtable_list = [
