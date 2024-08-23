@@ -1,39 +1,44 @@
 from django import forms
+from django_select2 import forms as s2forms
+from ....generic_forms import DocumentForm, DocumentSubtableItemForm
 
 from ....entities.documents.class_group_enrollment.models import ClassGroupEnrollment, ClassGroupEnrollmentItem
+from ....entities.catalogs.student.models import Student
+from ....entities.catalogs.class_group.models import ClassGroup
 
 
-class ClassGroupEnrollmentItemForm(forms.ModelForm):
+class ClassGroupEnrollmentItemForm(DocumentSubtableItemForm):
     class Meta:
         model = ClassGroupEnrollmentItem
         fields = ['class_group_enrollment', 'student', 'class_group']
+        widgets = {
+            'student': s2forms.ModelSelect2Widget(
+                search_fields=[
+                    "individual__last_name__icontains",
+                    "individual__first_name__icontains",
+                    "individual__patronymic__icontains",
+                ],
+                queryset=Student.objects.all().order_by('individual')
+            ),
+            'class_group': s2forms.ModelSelect2Widget(
+                search_fields=["grade__icontains"],
+                queryset=ClassGroup.objects.all().order_by('grade')
+            ),
+        }
 
-    def __init__(self, *args, **kwargs):
-        super(ClassGroupEnrollmentItemForm, self).__init__(*args, **kwargs)
-        for field in self.fields.items():
-            widget = field[1].widget
-            if 'class' in widget.attrs:
-                widget.attrs['class'] += ' form-control'
-            else:
-                widget.attrs['class'] = 'form-control'
 
-
-class ClassGroupEnrollmentForm(forms.ModelForm):
+class ClassGroupEnrollmentForm(DocumentForm):
 
     class Meta:
         model = ClassGroupEnrollment
         fields = ['number', 'date', 'enrollment_date']
 
-    def __init__(self, *args, **kwargs):
-        super(ClassGroupEnrollmentForm, self).__init__(*args, **kwargs)
-        for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control'
-        self.fields['number'].disabled = True
+
 
     class_group_enrollment_list = forms.inlineformset_factory(
             ClassGroupEnrollment,
             ClassGroupEnrollmentItem,
             form=ClassGroupEnrollmentItemForm,
-            extra=40,
+            extra=5,
             can_delete=True
         )

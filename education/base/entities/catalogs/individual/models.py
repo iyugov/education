@@ -3,10 +3,6 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import ValidationError
 from re import fullmatch
 
-from django.db.models import Max
-from django.db.models.signals import pre_save
-from django.dispatch import receiver
-
 from ....generic_models import Catalog, SubtableItem
 from ...enumerations.gender.models import Gender
 from ...catalogs.contact_info_type.models import ContactInfoType
@@ -20,11 +16,11 @@ def social_insurance_number_validator(number: str | None) -> None:
         raise ValidationError('Некорректный СНИЛС: не соответствует шаблону "NNN-NNN-NNN NN".')
     number = number.replace('-', '').replace(' ', '')
     for digit in '0123456789':
-        if digit * 3 in number:
+        if digit * 3 in number[:-2]:
             raise ValidationError('Некорректный СНИЛС: три одинаковые цифры подряд.')
     control_number = int(number[-2:])
     digits_weighted_sum = sum(int(number[index]) * (9 - index) for index in range(len(number) - 2))
-    if digits_weighted_sum % 101 != control_number:
+    if digits_weighted_sum % 101 % 100 != control_number:
         raise ValidationError('Некорректный СНИЛС: проверка по контрольным цифрам не пройдена.')
 
 

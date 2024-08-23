@@ -31,9 +31,6 @@ class ClassGroupEnrollment(Document):
 class ClassGroupEnrollmentItem(SubtableItem):
     """Элемент зачисления в класс."""
 
-    entity_name = 'class_group_enrollment'
-    """Внутреннее имя сущности."""
-
     class_group_enrollment = models.ForeignKey(ClassGroupEnrollment, null=True, on_delete=models.CASCADE, verbose_name='Зачисление')
     """Зачисление."""
 

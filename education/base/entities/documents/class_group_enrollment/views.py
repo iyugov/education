@@ -85,7 +85,7 @@ def class_group_enrollment_item(request, pk=None):
             'title': 'Зачисления',
             'class': ClassGroupEnrollmentItem,
             'form_class': ClassGroupEnrollmentItemForm,
-            'extra_lines': 40,
+            'extra_lines': 5,
             'base_field': 'student',
             'owner_field': 'class_group_enrollment',
             'fields': [
@@ -95,4 +95,14 @@ def class_group_enrollment_item(request, pk=None):
         }
     ]
     labels_width = 12
-    return render_document_item(entity_model, edit_form, url_name, fields, labels_width, request, instance_pk=pk, subtable_list=subtable_list, registry_list=registry_list)
+    return render_document_item(
+        entity_model,
+        edit_form,
+        url_name,
+        fields,
+        labels_width,
+        request,
+        instance_pk=pk,
+        subtable_list=subtable_list,
+        registry_list=registry_list,
+    )

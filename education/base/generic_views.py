@@ -2,9 +2,6 @@ from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.forms import inlineformset_factory
 
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import Permission
-
 from .views import render_page as render
 
 from .generic_models import Catalog, Document
@@ -170,7 +167,6 @@ def render_catalog_item(entity_model, edit_form, url_name, fields, labels_width,
         context['item_extra_actions'] = item_extra_actions
 
     context['can_change'] = request.user.has_perm(get_model_permission_name(entity_model, 'change'))
-
     return render(request, template_name, context)
 
 

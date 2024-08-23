@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 
 from .entities.catalogs.student import views as student_views
 from .entities.catalogs.class_group import views as class_group_views
@@ -18,6 +18,8 @@ from .generic_views import generic_view
 urlpatterns = [
 
     path('', generic_view, name=''),
+
+    path("select2/", include("django_select2.urls")),
 
     path('individual/list/', individual_views.individual_list, name='individual_list'),
     path('individual/new/', individual_views.individual_item, name='individual_new'),

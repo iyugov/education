@@ -46,8 +46,8 @@ def pass_tag_list(request):
     entity_model = PassTag
     url_name = 'pass_tag'
     columns = [
-        {'name': 'tag_id', 'title': 'Идентификатор', 'width': 16, 'type': 'text', 'link': url_name + '_edit'},
-        {'name': 'actions', 'title': 'Действия', 'width': 20, 'type': 'actions'}
+        {'name': 'tag_id', 'title': 'Идентификатор', 'width': 20, 'type': 'text', 'link': url_name + '_edit'},
+        {'name': 'actions', 'title': 'Действия', 'width': 24, 'type': 'actions'}
     ]
     row_actions = [
         {'name': 'edit', 'title': 'Изменить', 'url': url_name + '_edit', 'button_class': 'btn-outline-primary'},

@@ -184,9 +184,11 @@ def individual_upload_csv(request):
             except Exception:
                 success_flag = False
                 error_message = 'Файл имеет неверный формат.'
+            # Проверка на непустоту загружаемых данных
             if success_flag and not valid_individual_data:
                 success_flag = False
                 error_message = 'Файл не содержит данных для физических лиц.'
+            # Загрузка данных, уже проверенных на корректность
             if success_flag:
                 unique_pks = set()
                 unique_social_insurance_numbers = set()
@@ -217,14 +219,25 @@ def individual_upload_csv(request):
                                 unique_pks.add(individual.pk)
                                 unique_social_insurance_numbers.add(individual.social_insurance_number)
                             else:
-                                individual = Individual.objects.create(
-                                    last_name=valid_individual['last_name'],
-                                    first_name=valid_individual['first_name'],
-                                    patronymic=valid_individual['patronymic'],
-                                    gender=valid_individual['gender'],
-                                    social_insurance_number=valid_individual['social_insurance_number'],
-                                    comment=valid_individual['comment'],
-                                )
+                                if valid_individual['birth_date']:
+                                    individual = Individual.objects.create(
+                                        last_name=valid_individual['last_name'],
+                                        first_name=valid_individual['first_name'],
+                                        patronymic=valid_individual['patronymic'],
+                                        birth_date=valid_individual['birth_date'],
+                                        gender=valid_individual['gender'],
+                                        social_insurance_number=valid_individual['social_insurance_number'],
+                                        comment=valid_individual['comment'],
+                                    )
+                                else:
+                                    individual = Individual.objects.create(
+                                        last_name=valid_individual['last_name'],
+                                        first_name=valid_individual['first_name'],
+                                        patronymic=valid_individual['patronymic'],
+                                        gender=valid_individual['gender'],
+                                        social_insurance_number=valid_individual['social_insurance_number'],
+                                        comment=valid_individual['comment'],
+                                    )
                                 if valid_individual['birth_date']:
                                      individual.birth_date = valid_individual['birth_date']
                                 if set_students and not hasattr(individual, 'student'):

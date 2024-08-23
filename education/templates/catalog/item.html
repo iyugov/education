@@ -5,6 +5,7 @@
 
 {% block content %}
 <form method="post">
+    {{ form.media }}
     {% csrf_token %}
     <div class="row">
         <div class="mb-3">
@@ -45,7 +46,7 @@
                 </div>
             {% endwith %}
         {% endfor %}
-        {{ form.individual.errors.as_p }}
+        {{ form.instance.errors.as_p }}
     </div>
     {% for formset_subtable in formset_subtable_list %}
         <h2>{{ formset_subtable.subtable.title }}</h2>
@@ -58,7 +59,6 @@
                         <th style="width: {{ field.width }}em;">{{ field.title }}</th>
                     {% endfor %}
                 </thead>
-
                 <tbody>
                     {% for subform in formset_subtable.formset %}
                         <tr class="formset-form">

@@ -1,75 +1,43 @@
-from django.db import models
-from django.db.models import Max
-from django.utils.translation import gettext_lazy as _
-from django.utils.timezone import now
-
-from datetime import datetime
+from django import forms
+from django_select2 import forms as s2forms
 
 
-class Catalog(models.Model):
-    """Справочник."""
+class CatalogForm(forms.ModelForm):
 
-    entity_name = '<catalog>'
-    """Внутреннее имя сущности."""
+    dummy = forms.ChoiceField(widget=s2forms.ModelSelect2Widget, required=False)
 
-    code = models.IntegerField(_("Код"), unique=True)
-
-    title = models.CharField(_("Наименование"), max_length=50, blank=True, default='')
-    """Наименование."""
-
-    class Meta:
-        abstract = True
-
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            last_code = self.__class__.objects.all().aggregate(largest=Max('code'))
-            if last_code["largest"] is not None:
-                self.code = last_code["largest"] + 1
-            else:
-                self.code = 1
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.title
+    def __init__(self, *args, **kwargs):
+        super(CatalogForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+            if isinstance(visible.field.widget, forms.widgets.CheckboxInput):
+                visible.field.widget.attrs['class'] = 'form-check-input'
+            elif isinstance(visible.field.widget, s2forms.ModelSelect2Widget):
+                visible.field.widget.attrs['data-allow-clear'] = 'true'
+                visible.field.widget.attrs['data-placeholder'] = '---'
+        if hasattr(self, 'code'):
+            self.fields['code'].disabled = True
+        if hasattr(self, 'number'):
+            self.fields['number'].disabled = True
 
 
-class Document(models.Model):
-    """Документ."""
-
-    entity_name = '<document>'
-    """Внутреннее имя сущности."""
-
-    number = models.IntegerField(_("Номер"), unique=True)
-
-    date = models.DateField(_("Дата"), default=now)
-
-    class Meta:
-        abstract = True
-
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            last_number = self.__class__.objects.all().aggregate(largest=Max('number'))
-            if last_number["largest"] is not None:
-                self.number = last_number["largest"] + 1
-            else:
-                self.number = 1
-            self.date = datetime.now()
-        super().save(*args, **kwargs)
 
 
-class Enumeration(models.Model):
-    """Перечисление."""
-    class Meta:
-        abstract = True
+class CatalogSubtableItemForm(forms.ModelForm):
+
+    dummy = forms.ChoiceField(widget=s2forms.ModelSelect2Widget, required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(CatalogSubtableItemForm, self).__init__(*args, **kwargs)
+        for field in self.fields.items():
+            widget = field[1].widget
+            widget.attrs['class'] = 'form-control'
+            if isinstance(widget, forms.widgets.CheckboxInput):
+                widget.attrs['class'] = 'form-check-input'
+            elif isinstance(widget, s2forms.ModelSelect2Widget):
+                widget.attrs['data-allow-clear'] = 'true'
+                widget.attrs['data-placeholder'] = '---'
 
 
-class RegistryItem(models.Model):
-    """Элемент регистра."""
-    class Meta:
-        abstract = True
-
-
-class SubtableItem(models.Model):
-    """Элемент табличной части."""
-    class Meta:
-        abstract = True
+DocumentForm = CatalogForm
+DocumentSubtableItemForm = CatalogSubtableItemForm
