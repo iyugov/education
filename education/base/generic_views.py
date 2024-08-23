@@ -2,9 +2,53 @@ from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.forms import inlineformset_factory
 
+from abc import ABC, abstractmethod
+from django.views.generic.edit import DeleteView
+from .metadata import get_dependencies
+
 from .views import render_page as render
 
 from .generic_models import Catalog, Document
+
+
+class EntityDeleteView(ABC, DeleteView):
+
+    @property
+    @abstractmethod
+    def model(self):
+        pass
+
+    @property
+    @abstractmethod
+    def success_url(self):
+        pass
+
+    template_name = 'object_confirm_delete.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object'] = self.get_object()
+        context['object_verbose_name'] = self.model._meta.verbose_name
+        context['back_url'] = self.success_url
+        return context
+
+    def get(self, request, *args, **kwargs):
+        object_to_delete = self.get_object()
+        dependencies = get_dependencies(object_to_delete)
+        context = {
+            'username': request.user.username,
+            'object': object_to_delete,
+            'object_verbose_name': self.model._meta.verbose_name,
+            'dependencies': dependencies,
+            'back_url': self.success_url
+        }
+        if dependencies != {}:
+            return render(request, 'object_cannot_delete.html', context)
+        if hasattr(self, 'registry_list'):
+            for registry in self.registry_list:
+                registrar_filter = {registry['registrar_link_field']: object_to_delete}
+                registry['class'].objects.filter(**registrar_filter).delete()
+        return super().get(request, *args, **kwargs)
 
 
 def generic_view(request):

@@ -1,42 +1,22 @@
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
-from django.views.generic.edit import DeleteView
 
-from ....views import render_page as render
-from ....metadata import get_dependencies
-from ....generic_views import render_document_list, render_document_item
+from ....generic_views import render_document_list, render_document_item, EntityDeleteView
 
 from ....entities.documents.class_group_enrollment.models import ClassGroupEnrollment, ClassGroupEnrollmentItem
 from ....entities.registries.class_group_enrollment_registry.models import ClassGroupEnrollmentRegistryItem
 from ....entities.documents.class_group_enrollment.forms import ClassGroupEnrollmentForm, ClassGroupEnrollmentItemForm
 
 
-class ClassGroupEnrollmentDelete(DeleteView):
+class ClassGroupEnrollmentDelete(EntityDeleteView):
     model = ClassGroupEnrollment
     success_url = reverse_lazy('class_group_enrollment_list')
-    template_name = 'object_confirm_delete.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['object'] = self.get_object()
-        context['object_verbose_name'] = self.model._meta.verbose_name
-        context['back_url'] = self.success_url
-        return context
-
-    def get(self, request, *args, **kwargs):
-        object_to_delete = self.get_object()
-        dependencies = get_dependencies(object_to_delete)
-        context = {
-            'username': request.user.username,
-            'object': object_to_delete,
-            'object_verbose_name': self.model._meta.verbose_name,
-            'dependencies': dependencies,
-            'back_url': self.success_url
+    registry_list = [
+        {
+            'class': ClassGroupEnrollmentRegistryItem,
+            'registrar_link_field': 'class_group_enrollment',
         }
-        if dependencies != {}:
-            return render(request, 'object_cannot_delete.html', context)
-        ClassGroupEnrollmentRegistryItem.objects.filter(class_group_enrollment=object_to_delete).delete()
-        return super().get(request, *args, **kwargs)
+    ]
 
 
 @login_required(login_url='/login/')

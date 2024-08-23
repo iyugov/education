@@ -1,40 +1,15 @@
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
-from django.views.generic.edit import DeleteView
 
-from ....views import render_page as render
-from ....metadata import get_dependencies
-from ....generic_views import render_catalog_list, render_catalog_item
+from ....generic_views import render_catalog_list, render_catalog_item, EntityDeleteView
 
 from ....entities.catalogs.employee.models import Employee, PositionItem
 from ....entities.catalogs.employee.forms import EmployeeForm, PositionItemForm
 
 
-class EmployeeDelete(DeleteView):
+class EmployeeDelete(EntityDeleteView):
     model = Employee
     success_url = reverse_lazy('employee_list')
-    template_name = 'object_confirm_delete.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['object'] = self.get_object()
-        context['object_verbose_name'] = self.model._meta.verbose_name
-        context['back_url'] = self.success_url
-        return context
-
-    def get(self, request, *args, **kwargs):
-        object_to_delete = self.get_object()
-        dependencies = get_dependencies(object_to_delete)
-        context = {
-            'username': request.user.username,
-            'object': object_to_delete,
-            'object_verbose_name': self.model._meta.verbose_name,
-            'dependencies': dependencies,
-            'back_url': self.success_url
-        }
-        if dependencies != {}:
-            return render(request, 'object_cannot_delete.html', context)
-        return super().get(request, *args, **kwargs)
 
 
 @login_required(login_url='/login/')

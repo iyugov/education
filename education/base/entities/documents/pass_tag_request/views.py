@@ -1,9 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
-from django.views.generic.edit import DeleteView
 from django.http import HttpResponse
 
-from ....generic_views import render_document_list, render_document_item
+from ....generic_views import render_document_list, render_document_item, EntityDeleteView
 
 from ....entities.documents.pass_tag_request.models import PassTagRequest, PassTagRequestItem
 from ....entities.documents.pass_tag_request.forms import PassTagRequestForm, PassTagRequestItemForm
@@ -11,17 +10,9 @@ from ....entities.documents.pass_tag_request.forms import PassTagRequestForm, Pa
 import csv
 
 
-class PassTagRequestDelete(DeleteView):
+class PassTagRequestDelete(EntityDeleteView):
     model = PassTagRequest
     success_url = reverse_lazy('pass_tag_request_list')
-    template_name = 'object_confirm_delete.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['object'] = self.get_object()
-        context['object_verbose_name'] = self.model._meta.verbose_name
-        context['back_url'] = self.success_url
-        return context
 
 
 @login_required(login_url='/login/')
